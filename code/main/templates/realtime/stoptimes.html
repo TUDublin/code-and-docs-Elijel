@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+{% block metadescription %}
+	TEST
+{% endblock %}
+{% block title %}
+	TEST
+{% endblock %}
+{% block content %}
+
+
+{% if stop %}
+	<h3 class="text-center pt-2 pb-2">{{ stop.stop_name }}</h3>
+{% endif %}
+
+<table class="table">
+	
+	<thead>
+	  <tr>
+		<th class="col-2">ROUTE</th>
+		<th class="col-2">DIRECTION</th>
+		<th class="col-2">DUE</th>
+	  </tr>
+	</thead>
+
+	<tbody>
+		{% for i in stop_time_list %}
+				<tr>
+					{% if i.arrival_time is None %}
+					{%else%}
+					<td>{{i.route_short_name}}</td>
+					<td>{{i.stop_headsign}}</td>
+					<td>{{i.arrival_time}}</td>
+					{%endif%}
+				</tr>
+	  {% endfor %}
+	</tbody>
+</table>
+{% endblock %}
+
