@@ -9,29 +9,6 @@ import datetime
 from django.db.models import Q
 from .tasks import Convert
 
-def home(request):
-    url='https://api.nationaltransport.ie/gtfsr/v1?format=json'
-
-    headers = {
-        'X-API-KEY': 'ddece4bcc95b497f97aaa72b96617dca',
-        'Content-Type': 'application/json; charset=utf-8',
-        'User-agent': 'your bot 0.1'
-    }
-
-    response = requests.get(url, headers=headers, verify=True).json()
-
-    realtimedict = []
-    for each in range(len(response["Entity"])):
-        for items in range(len(response["Entity"][each]["TripUpdate"]["StopTimeUpdate"])):
-                    rt_trip_id = (response["Entity"][each]["TripUpdate"]["Trip"]["TripId"]) #TripID
-                    rt_route_id = (response["Entity"][each]["TripUpdate"]["Trip"]["RouteId"]) #RouteId
-                    rt_schedule = (response["Entity"][each]["TripUpdate"]["Trip"]["ScheduleRelationship"]) #ScheduleRelationship
-                    rt_stop_sequence = (response["Entity"][each]["TripUpdate"]["StopTimeUpdate"][items]["StopSequence"]) #StopSequence
-                    rt_stop_id = (response["Entity"][each]["TripUpdate"]["StopTimeUpdate"][items]["StopId"]) #StopId
-                    realtimedict.append(list({'rt_trip_id': rt_trip_id, 'rt_route_id':rt_route_id, 'rt_schedule':rt_schedule, 'rt_stop_sequence':rt_stop_sequence, 'rt_stop_id':rt_stop_id}))
- 
-    return render(request,'realtime/test.html',({'response':response, 'result':realtimedict}))
-
 #Convert List to Dict
 def Convert(a):
     it = iter(a)
@@ -44,6 +21,8 @@ def allStopTimes(request, stop_id=None):
     stop_time_list = None
     if stop_id != None:
         c_page = get_object_or_404(Stop, stop_id=stop_id)
+        stop_lat = c_page.stop_lat
+        stop_lon = c_page.stop_lon
         stop_time_list = (Stop_Time.objects.filter(Q(stop_id=c_page, arrival_time__gte=now)))
         #get api objects
 
@@ -100,7 +79,7 @@ def allStopTimes(request, stop_id=None):
     else:
         stop_time_list = (Stop_Time.objects.all().filter())
 
-    return render(request,'realtime/stoptimes.html',{'stop':c_page, 'stop_time_list':filteredTimeLists})
+    return render(request,'realtime/stoptimes.html',{'stop':c_page, 'stop_time_list':filteredTimeLists, 'stop_lat': stop_lat, 'stop_lon': stop_lon})
     
 def allStops(request, stop_id=None):
     c_page = None
@@ -122,3 +101,70 @@ def allStops(request, stop_id=None):
     except (EmptyPage, InvalidPage):
         stop_lists = paginator.page(paginator.num_pages)
     return render(request,'realtime/stop.html',{'stops':c_page,'stop_lists':stop_lists})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def home(request):
+    url='https://api.nationaltransport.ie/gtfsr/v1?format=json'
+
+    headers = {
+        'X-API-KEY': 'ddece4bcc95b497f97aaa72b96617dca',
+        'Content-Type': 'application/json; charset=utf-8',
+        'User-agent': 'your bot 0.1'
+    }
+
+    response = requests.get(url, headers=headers, verify=True).json()
+
+    realtimedict = []
+    for each in range(len(response["Entity"])):
+        for items in range(len(response["Entity"][each]["TripUpdate"]["StopTimeUpdate"])):
+                    rt_trip_id = (response["Entity"][each]["TripUpdate"]["Trip"]["TripId"]) #TripID
+                    rt_route_id = (response["Entity"][each]["TripUpdate"]["Trip"]["RouteId"]) #RouteId
+                    rt_schedule = (response["Entity"][each]["TripUpdate"]["Trip"]["ScheduleRelationship"]) #ScheduleRelationship
+                    rt_stop_sequence = (response["Entity"][each]["TripUpdate"]["StopTimeUpdate"][items]["StopSequence"]) #StopSequence
+                    rt_stop_id = (response["Entity"][each]["TripUpdate"]["StopTimeUpdate"][items]["StopId"]) #StopId
+                    realtimedict.append(list({'rt_trip_id': rt_trip_id, 'rt_route_id':rt_route_id, 'rt_schedule':rt_schedule, 'rt_stop_sequence':rt_stop_sequence, 'rt_stop_id':rt_stop_id}))
+ 
+    return render(request,'realtime/test.html',({'response':response, 'result':realtimedict}))

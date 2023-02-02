@@ -1,17 +1,40 @@
 {% extends "base.html" %}
 {% load static %}
 {% block metadescription %}
-	TEST
+Stop Times
 {% endblock %}
 {% block title %}
-	TEST
+Stop Times
 {% endblock %}
 {% block content %}
 
-
 {% if stop %}
-	<h3 class="text-center pt-2 pb-2">{{ stop.stop_name }}</h3>
+<h3 class="text-center pt-2 pb-2">{{ stop.stop_name }}</h3>
 {% endif %}
+
+<div id="map" style="height: 500px; width: 100%; margin-top: 1em;"></div>
+
+<script>
+  function initMap() {
+    var lat = {{stop_lat}};
+    var lng = {{stop_lon}};
+    var stopLocation = {lat: lat, lng: lng};
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 19,
+      center: stopLocation
+    });
+
+    var marker = new google.maps.Marker({
+      position: stopLocation,
+      map: map
+    });
+}
+</script>
+
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAzrvIvbaR-QS_49R5irnOvy-sD3WmIeR0&callback=initMap">
+</script>
 
 <table class="table">
 	
@@ -37,4 +60,3 @@
 	</tbody>
 </table>
 {% endblock %}
-
