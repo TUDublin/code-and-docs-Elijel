@@ -1,12 +1,18 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Favorite Stops</h1>
+  <h1 class="text-center">Favorite Stops</h1>
   {% if favorite_stops %}
     <ul>
     {% for favorite in favorite_stops %}
-      <li>{{ favorite.stop }}</li>
-    {% endfor %}
+				<div class="my_bottom margin col-9 col-lg-4 col-sm-12 col-md-4 pt-3">
+					<div class="card text-center h-100" style="max-width:500px;">
+						<div class="card-body">
+							<a href="{{stops.get_absolute_url}}"><h4>{{favorite.stop}}</h4></a>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
     </ul>
   {% else %}
     <p>You don't have any favorite stops yet.</p>

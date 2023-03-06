@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Ninth navbar example">
     <div class="container-xl">
-      <a class="navbar-brand" href="{% url 'main:allStops' %}">RealTime BusApp</a>
+      <a class="navbar-brand" href="{% url 'main:home' %}">DB BusApp</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -13,7 +13,6 @@
             <div class="text-light">
               <a class="fas fa-user-circle"></a>
               <a href="#" class="text-light mr-3">{{ user.username }}</a>
-              <a href="accounts/favorites" class="text-light">Favorites <i class="text-light"></i></a>
               <a href="{% url 'signout' %}" class="text-light">Sign Out <i class="fas fa-sign-out-alt text-light"></i></a>
             </div>
           {% else %}

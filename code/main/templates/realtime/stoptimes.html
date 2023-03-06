@@ -42,11 +42,14 @@ Stop Times
 	</div>
 </div>
 
-<form method="POST" action="{% url 'favoriteStops' %}">
+<form method="POST" action="">
 	{% csrf_token %}
-	{{ form.as_p }}
-	<button type="submit" class="btn btn-primary">Add to Favorites</button>
+	<input type="hidden" name="stop_id" value="{{ stop.id }}">
+	<button type="submit">Add to Favorites</button>
 </form>
+  
+  
+
 
 <script>
   function initMap() {

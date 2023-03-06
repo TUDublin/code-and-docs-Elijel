@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %} 
+	{% if continent %}
+		{{ continent.name }}
+	{% else %}
+		Global
+	{% endif %}
+{% endblock %}
+{% block content %}
+
+<style>
+    .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+    .box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 350px;
+        height: 300px;
+        background-color: gray;
+        margin: 10px;
+        font-size: 24px;
+        color: white;
+    }
+</style>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-5">
+      <a href="#">
+        <div class="box bg-primary">
+          <i class="fa fa-bus fa-5x"></i>
+          <h3>Routes</h3>
+        </div>
+      </a>
+    </div>
+    <div class="col-md-3">
+      <a href="{% url 'main:allStops' %}">
+        <div class="box bg-danger">
+          <i class="fa fa-subway fa-5x"></i>
+          <h3>Stops</h3>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-md-5">
+      <a href="accounts/favorites">
+        <div class="box bg-warning">
+          <i class="fa fa-train fa-5x"></i>
+          <h3>Favourites</h3>
+        </div>
+      </a>
+    </div>
+    <div class="col-md-3">
+      <a href="#">
+        <div class="box bg-info">
+          <i class="fa fa-map-marker fa-5x"></i>
+          <h3>Nearby Stops</h3>
+        </div>
+      </a>
+    </div>
+   </div>
+</div>
+
+{% endblock %}
+</html>

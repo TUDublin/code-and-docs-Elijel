@@ -77,8 +77,8 @@ def allStopTimes(request, stop_id=None):
     if request.method == 'POST':
         form = FavoriteStopForm(request.POST)
         if form.is_valid():
-            favorite_stop = form.cleaned_data['stop']
-            favorite, created = FavoriteStop.objects.get_or_create(user=request.user, stop=favorite_stop)
+            avorite_stop = form.cleaned_data['stop']
+            favorite, created = FavoriteStop.objects.get_or_create(user=request.user, stop=stop_id)
             if created:
                 messages.success(request, 'Stop added to favorites successfully.')
                 return redirect('favoriteStops')
@@ -113,51 +113,48 @@ def allStops(request, stop_id=None):
         stop_lists = paginator.page(paginator.num_pages)
     return render(request,'realtime/stop.html',{'stops':c_page,'stop_lists':stop_lists})
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def home(request):
+    return render(request, 'realtime/home.html')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def test(request):
     url='https://api.nationaltransport.ie/gtfsr/v1?format=json'
 
     headers = {

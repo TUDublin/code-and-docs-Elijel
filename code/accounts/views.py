@@ -41,4 +41,5 @@ def signoutView(request):
 
 def favoriteStops(request):
     favorite_stops = FavoriteStop.objects.filter(user=request.user)
-    return render(request,'favoriteStops.html', {'favorite_stops':favorite_stops})
+    stops = [fs.stop for fs in favorite_stops]
+    return render(request, 'favoriteStops.html', {'favorite_stops': favorite_stops, 'stops': stops})
