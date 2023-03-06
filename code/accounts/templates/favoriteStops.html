@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Favorite Stops</h1>
+  {% if favorite_stops %}
+    <ul>
+    {% for favorite in favorite_stops %}
+      <li>{{ favorite.stop }}</li>
+    {% endfor %}
+    </ul>
+  {% else %}
+    <p>You don't have any favorite stops yet.</p>
+  {% endif %}
+{% endblock %}

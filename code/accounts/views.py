@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
-from .forms import CustomUserCreationForm
-from .models import CustomUser
+from .forms import CustomUserCreationForm, FavoriteStopForm
+from .models import CustomUser, FavoriteStop
+from main.models import Stop
 from django.contrib.auth.models import Group
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
@@ -37,3 +38,7 @@ def signinView(request):
 def signoutView(request):
     logout(request)
     return redirect('signin')
+
+def favoriteStops(request):
+    favorite_stops = FavoriteStop.objects.filter(user=request.user)
+    return render(request,'favoriteStops.html', {'favorite_stops':favorite_stops})

@@ -8,11 +8,45 @@ Stop Times
 {% endblock %}
 {% block content %}
 
-{% if stop %}
-<h3 class="text-center pt-2 pb-2">{{ stop.stop_name }}</h3>
-{% endif %}
+<div class="row">
+	<div class="col-7">	
+		<div id="map" style="height: 700px; width: 100%;"></div>
+	</div>
+	<div class="col">
+		{% if stop %}
+		<h4 class="text-center pt-2 pb-2">{{ stop.stop_name }}</h>
+		{% endif %}
+		<table class="table">
+	
+			<thead>
+			  <tr>
+				<th class="col-1">ROUTE</th>
+				<th class="col-1">DIRECTION</th>
+				<th class="col-1">DUE</th>
+			  </tr>
+			</thead>
+		
+			<tbody>
+				{% for i in stop_time_list %}
+						<tr>
+							{% if i.arrival_time is None %}
+							{%else%}
+							<td>{{i.route_short_name}}</td>
+							<td>{{i.stop_headsign}}</td>
+							<td>{{i.arrival_time}}</td>
+							{%endif%}
+						</tr>
+			  {% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
 
-<div id="map" style="height: 500px; width: 100%; margin-top: 1em;"></div>
+<form method="POST" action="{% url 'favoriteStops' %}">
+	{% csrf_token %}
+	{{ form.as_p }}
+	<button type="submit" class="btn btn-primary">Add to Favorites</button>
+</form>
 
 <script>
   function initMap() {
@@ -21,7 +55,7 @@ Stop Times
     var stopLocation = {lat: lat, lng: lng};
 
     var map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 19,
+      zoom: 18,
       center: stopLocation
     });
 
@@ -36,27 +70,5 @@ Stop Times
 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAzrvIvbaR-QS_49R5irnOvy-sD3WmIeR0&callback=initMap">
 </script>
 
-<table class="table">
-	
-	<thead>
-	  <tr>
-		<th class="col-2">ROUTE</th>
-		<th class="col-2">DIRECTION</th>
-		<th class="col-2">DUE</th>
-	  </tr>
-	</thead>
 
-	<tbody>
-		{% for i in stop_time_list %}
-				<tr>
-					{% if i.arrival_time is None %}
-					{%else%}
-					<td>{{i.route_short_name}}</td>
-					<td>{{i.stop_headsign}}</td>
-					<td>{{i.arrival_time}}</td>
-					{%endif%}
-				</tr>
-	  {% endfor %}
-	</tbody>
-</table>
 {% endblock %}
