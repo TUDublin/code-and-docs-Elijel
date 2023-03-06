@@ -42,12 +42,13 @@ Stop Times
 	</div>
 </div>
 
+{% if user.is_authenticated %}
 <form method="POST" action="">
 	{% csrf_token %}
 	<input type="hidden" name="stop_id" value="{{ stop.id }}">
 	<button type="submit">Add to Favorites</button>
 </form>
-  
+{%endif%}
   
 
 

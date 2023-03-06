@@ -14,4 +14,4 @@ class FavoriteStop(models.Model):
         unique_together = ('user', 'stop')
 
     def __str__(self):
-        return f'{self.user.username} - {self.stop.stop_id}'
+        return f'{self.user.username} - {str(self.stop.stop_name)}'

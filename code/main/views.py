@@ -77,7 +77,7 @@ def allStopTimes(request, stop_id=None):
     if request.method == 'POST':
         form = FavoriteStopForm(request.POST)
         if form.is_valid():
-            avorite_stop = form.cleaned_data['stop']
+            favorite_stop = form.cleaned_data['stop']
             favorite, created = FavoriteStop.objects.get_or_create(user=request.user, stop=stop_id)
             if created:
                 messages.success(request, 'Stop added to favorites successfully.')
