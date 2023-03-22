@@ -1,6 +1,6 @@
 from turtle import Shape
 from django.contrib import admin
-from .models import Stop, Stop_Time, Route, Trip, Agency, Calender, Calender_Dates, Realtime, Nearby_Stop
+from .models import Stop, Stop_Time, Route, Trip, Agency, Calender, Calender_Dates, Realtime
 
 admin.site.register(Realtime)
 
@@ -33,7 +33,3 @@ class Stop_TimesAdmin(admin.ModelAdmin):
     list_display = ['arrival_time', 'departure_time', 'trip_id', 'stop_id', 'stop_sequence', 'stop_headsign', 'pickup_type', 'dropoff_type', 'shape_dist_traveled']
     list_per_page = 20
 admin.site.register(Stop_Time, Stop_TimesAdmin)
-
-class Nearby_StopAdmin(admin.ModelAdmin):
-    list_display = ['stop', 'distance', 'latitude', 'longitude']
-admin.site.register(Nearby_Stop, Nearby_StopAdmin)

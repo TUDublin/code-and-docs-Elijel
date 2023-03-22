@@ -16,8 +16,6 @@ from django.core import serializers
 from .models import Stop, Stop_Time
 import json
 
-
-
 #Convert List to Dict
 def Convert(a):
     it = iter(a)
