@@ -128,3 +128,17 @@ class Stop_Time(models.Model):
     def __str__(self):
         return self.stop_headsign
 
+class Nearby_Stop(models.Model):
+    stop = models.ForeignKey(Stop, on_delete=models.CASCADE)
+    distance = models.FloatField()
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    
+    class Meta:
+        ordering = ('distance',)
+    
+    def __str__(self):
+        return f"{self.stop.stop_name} ({self.distance} meters away)"
+
+    
+

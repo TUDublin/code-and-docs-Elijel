@@ -23,9 +23,7 @@
 	{% for i in route %}
 		{{i.route_short_name}}
 	{% endfor %}
-
-
-
+	
     <div class="container">
 		<div class="row mx-auto">
 			{% for stops in stop_lists.object_list %}
@@ -52,5 +50,9 @@
 		</div>
 		<br>
 	</div>
+
+	<script async defer
+	  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAzrvIvbaR-QS_49R5irnOvy-sD3WmIeR0&callback=initMap">
+	</script>
 {% endblock %}
 </html>

@@ -15,7 +15,7 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        height: 100vh;
+        height: 80vh;
     }
     .row {
         display: flex;
@@ -49,7 +49,7 @@
     <div class="col-md-3">
       <a href="{% url 'main:allStops' %}">
         <div class="box bg-danger">
-          <i class="fa fa-subway fa-5x"></i>
+          <i class="fa fa-sign fa-5x"></i>
           <h3>Stops</h3>
         </div>
       </a>
@@ -63,13 +63,13 @@
       <a href="#">
     {%endif%}
         <div class="box bg-warning">
-          <i class="fa fa-train fa-5x"></i>
+          <i class="fa fa-star fa-5x"></i>
           <h3>Favourites</h3>
         </div>
       </a>
     </div>
     <div class="col-md-3">
-      <a href="#">
+      <a href="{% url 'main:nearby_stops' %}">
         <div class="box bg-info">
           <i class="fa fa-map-marker fa-5x"></i>
           <h3>Nearby Stops</h3>

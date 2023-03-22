@@ -10,11 +10,11 @@ Stop Times
 
 <div class="row">
 	<div class="col-7">	
-		<div id="map" style="height: 700px; width: 100%;"></div>
+		<div id="map" style="height: 850px; width: 100%;"></div>
 	</div>
 	<div class="col">
 		{% if stop %}
-		<h4 class="text-center pt-2 pb-2">{{ stop.stop_name }}</h>
+		<h3 class="text-center pt-2 pb-2">{{ stop.stop_name }}</h3>
 		{% endif %}
 		<table class="table">
 	
@@ -53,21 +53,72 @@ Stop Times
 
 
 <script>
-  function initMap() {
+function initMap() {
     var lat = {{stop_lat}};
     var lng = {{stop_lon}};
     var stopLocation = {lat: lat, lng: lng};
 
-    var map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 18,
-      center: stopLocation
-    });
+    // Check if geolocation is supported
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            // Use user's current location as center of map
+            var userLocation = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 18,
+                center: stopLocation
+            });
 
-    var marker = new google.maps.Marker({
-      position: stopLocation,
-      map: map
-    });
+            // Add marker for user's location
+            var userMarker = new google.maps.Marker({
+                position: userLocation,
+                map: map,
+				icon: 'http://maps.google.com/mapfiles/kml/pal3/icon53.png',
+                title: 'Your Location'
+            });
+
+            // Add marker for stop location
+            var stopMarker = new google.maps.Marker({
+                position: stopLocation,
+                map: map,
+                title: '{{ stop.stop_name }}'
+            });
+
+            // Create info window for stop marker
+            var stopInfoWindow = new google.maps.InfoWindow({
+                content: '<h5>{{ stop.stop_name }}</h5>'
+            });
+
+            // Open info window for stop marker by default
+            stopInfoWindow.open(map, stopMarker);
+        });
+    } else {
+        // Geolocation not supported
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 18,
+            center: stopLocation
+        });
+
+        // Add marker for stop location
+        var stopMarker = new google.maps.Marker({
+            position: stopLocation,
+            map: map,
+            title: '{{ stop.stop_name }}'
+        });
+
+        // Create info window for stop marker
+        var stopInfoWindow = new google.maps.InfoWindow({
+            content: '<h5>{{ stop.stop_name }}</h5>'
+        });
+
+        // Open info window for stop marker by default
+        stopInfoWindow.open(map, stopMarker);
+    }
 }
+
+
 </script>
 
 <script async defer

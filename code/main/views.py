@@ -11,6 +11,12 @@ import datetime
 from django.db.models import Q
 from .tasks import Convert
 from django.contrib import messages
+from django.shortcuts import render
+from django.core import serializers
+from .models import Stop, Stop_Time
+import json
+
+
 
 #Convert List to Dict
 def Convert(a):
@@ -64,7 +70,7 @@ def allStopTimes(request, stop_id=None):
         filteredTimeList = [d for d in StopTimes_Dict if d['service_id'] in keyValList]
 
     '''Pagination Code'''
-    paginator = Paginator(filteredTimeList, 12)
+    paginator = Paginator(filteredTimeList, 15)
     try:
         page = int(request.GET.get('page', '1'))
     except:
@@ -112,6 +118,27 @@ def allStops(request, stop_id=None):
     except (EmptyPage, InvalidPage):
         stop_lists = paginator.page(paginator.num_pages)
     return render(request,'realtime/stop.html',{'stops':c_page,'stop_lists':stop_lists})
+
+def nearby_stops(request, stop_id=None):
+    c_page = None
+    stop_list = None
+    if stop_id != None:
+        c_page = get_object_or_404(Stop, stop_id=stop_id)
+        stop_list = Stop.objects.filter(stop_id=c_page)
+    else:
+        stop_list = Stop.objects.all().filter()
+
+    '''Pagination Code'''
+    paginator = Paginator(stop_list, 4349)
+    try:
+        page = int(request.GET.get('page', '1'))
+    except:
+        page = 1
+    try:
+        stop_lists = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        stop_lists = paginator.page(paginator.num_pages)
+    return render(request,'realtime/nearby_stops.html',{'stops':c_page,'stop_lists':stop_lists})
 
 def home(request):
     return render(request, 'realtime/home.html')
