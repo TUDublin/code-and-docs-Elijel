@@ -39,20 +39,18 @@ Stop Times
 			  {% endfor %}
 			</tbody>
 		</table>
+        {% if user.is_authenticated %}
+            {% if stop in request.user.favorites.all %}
+                <p class="text-center">This stop is already in your favorites.</p>
+            {% else %}
+                <a href="{% url 'addFavoriteView' stop_id=stop.stop_id %}" class="btn btn-primary">Add to favorites</a>
+            {% endif %}
+        {% endif %}
 	</div>
 </div>
 
-{% if user.is_authenticated %}
-<form method="POST" action="">
-	{% csrf_token %}
-	<input type="hidden" name="stop_id" value="{{ stop.id }}">
-	<button type="submit">Add to Favorites</button>
-</form>
-{%endif%}
-  
-
-
 <script>
+    
 function initMap() {
     var lat = {{stop_lat}};
     var lng = {{stop_lon}};
@@ -117,7 +115,6 @@ function initMap() {
         stopInfoWindow.open(map, stopMarker);
     }
 }
-
 
 </script>
 

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Favorite Stops</h1>
+  {% if favorites %}
+    <ul>
+      {% for favorite in favorites %}
+      <li>{{ favorite.stop }} <a href="{% url 'deleteFavoriteView' pk=favorite.pk %}">Delete</a></li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No favorite stops yet.</p>
+  {% endif %}
+{% endblock %}

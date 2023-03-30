@@ -1,20 +1,12 @@
-from time import sleep
 import requests
-from django.shortcuts import render, get_object_or_404, redirect
-from accounts.forms import CustomUserCreationForm, FavoriteStopForm
-from accounts.models import CustomUser, FavoriteStop
+from django.shortcuts import render, get_object_or_404
 from .models import Stop, Stop_Time, Trip, Route
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
-from datetime import timedelta
-from django.db.models.functions import Now
 import datetime
 from django.db.models import Q
 from .tasks import Convert
-from django.contrib import messages
 from django.shortcuts import render
-from django.core import serializers
 from .models import Stop, Stop_Time
-import json
 
 #Convert List to Dict
 def Convert(a):
@@ -77,25 +69,9 @@ def allStopTimes(request, stop_id=None):
         filteredTimeLists = paginator.page(page)
     except (EmptyPage, InvalidPage):
         filteredTimeLists = paginator.page(paginator.num_pages)
-
-    if request.method == 'POST':
-        form = FavoriteStopForm(request.POST)
-        if form.is_valid():
-            favorite_stop = form.cleaned_data['stop']
-            favorite, created = FavoriteStop.objects.get_or_create(user=request.user, stop=stop_id)
-            if created:
-                messages.success(request, 'Stop added to favorites successfully.')
-                return redirect('favoriteStops')
-            else:
-                messages.warning(request, 'This stop is already in your favorites.')
-        else:
-            messages.error(request, 'Form is not valid.')
-    else:
-        form = FavoriteStopForm()
         
-    return render(request,'realtime/stoptimes.html',{'stop':c_page, 'stop_time_list':filteredTimeLists, 'stop_lat': stop_lat, 'stop_lon': stop_lon, 'form':form})
+    return render(request,'realtime/stoptimes.html',{'stop':c_page, 'stop_time_list':filteredTimeLists, 'stop_lat': stop_lat, 'stop_lon': stop_lon})
 
-    
 def allStops(request, stop_id=None):
     c_page = None
     stop_list = None

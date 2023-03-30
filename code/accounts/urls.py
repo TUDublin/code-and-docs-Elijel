@@ -1,10 +1,11 @@
 from django.urls import path
-from main import views
-from .views import signupView, signinView, signoutView, favoriteStops
+from accounts.views import signupView, signinView, signoutView, addFavoriteView, deleteFavoriteView, favoritesView
 
 urlpatterns = [
     path('create/', signupView, name='signup'),
     path('login/', signinView, name='signin'),
     path('logout/', signoutView, name='signout'),
-    path('favorites/', favoriteStops, name='favoriteStops'),
+    path('favorites/add/<str:stop_id>/', addFavoriteView, name='addFavoriteView'),
+    path('favorites/delete/<int:pk>/', deleteFavoriteView, name='deleteFavoriteView'),
+    path('favorites/', favoritesView, name='favoritesView')
 ]

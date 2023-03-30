@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import CustomUser, FavoriteStop
+from .models import CustomUser, Favorite
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
@@ -14,6 +14,5 @@ class CustomUserChangeForm(UserChangeForm):
 
 class FavoriteStopForm(forms.ModelForm):
     class Meta:
-        model = FavoriteStop
-        fields = ['user', 'stop']
-        widgets = {'user': forms.HiddenInput()}
+        model = Favorite
+        fields = ('stop',)

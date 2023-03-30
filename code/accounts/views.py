@@ -1,10 +1,36 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import CustomUserCreationForm, FavoriteStopForm
-from .models import CustomUser, FavoriteStop
+from .models import CustomUser, Favorite
 from main.models import Stop
 from django.contrib.auth.models import Group
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate, logout
+from django.shortcuts import get_object_or_404, redirect
+@login_required
+def favoritesView(request):
+    user = request.user
+    favorites = Favorite.objects.filter(user=user)
+    return render(request, 'favorites.html', {'favorites': favorites})
+
+@login_required
+def addFavoriteView(request, stop_id):
+    user = request.user
+    stop = get_object_or_404(Stop, stop_id=stop_id)
+    
+    # Check if the stop is already favorited by the user
+    if Favorite.objects.filter(user=user, stop=stop).exists():
+        return redirect('favoritesView')
+    
+    favorite = Favorite(user=user, stop=stop)
+    favorite.save()
+    return redirect('favoritesView')
+
+@login_required
+def deleteFavoriteView(request, pk):
+    favorite = get_object_or_404(Favorite, pk=pk, user=request.user)
+    favorite.delete()
+    return redirect("favoritesView")
 
 def signupView(request):
     if request.method == 'POST':
@@ -38,8 +64,3 @@ def signinView(request):
 def signoutView(request):
     logout(request)
     return redirect('signin')
-
-def favoriteStops(request):
-    favorite_stops = FavoriteStop.objects.filter(user=request.user)
-    stops = [fs.stop for fs in favorite_stops]
-    return render(request, 'favoriteStops.html', {'favorite_stops': favorite_stops, 'stops': stops})
