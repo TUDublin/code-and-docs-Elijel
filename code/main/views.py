@@ -186,6 +186,8 @@ def routeDetails(request, route_id):
     # Get all the stops associated with the trips
     stops = Stop.objects.filter(stop_time__trip_id__in=trips).distinct()
 
+    locations = Stop.objects.filter(stop_time__trip_id__in=trips).distinct()
+
     # Paginate stops
     paginator = Paginator(stops, 15)
     page = request.GET.get('page')
@@ -209,6 +211,7 @@ def routeDetails(request, route_id):
         'trips': trips,
         'stops': stops,
         'headsigns': headsigns,
+        'locations' : locations
     }
 
     return render(request, 'realtime/route_detail.html', context)
