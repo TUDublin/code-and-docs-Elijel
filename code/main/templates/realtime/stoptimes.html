@@ -17,7 +17,7 @@ Stop Times
             <h3 class="text-center pt-2 pb-2">
                 {{ stop.stop_name }}         
                 {% if user.is_authenticated %}
-                    {% if stop in request.user.favorites.all %}
+                    {% if stop.stop_id in request.user.favorites.all %}
                         <p class="text-center">This stop is already in your favorites.</p>
                     {% else %}
                         <a href="{% url 'addFavoriteView' stop_id=stop.stop_id %}" class="btn btn-primary">Add to favorites</a>

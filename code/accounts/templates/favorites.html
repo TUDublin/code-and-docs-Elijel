@@ -8,7 +8,7 @@
           <div class="my_bottom margin col-9 col-lg-4 col-sm-12 col-md-4 pt-3">
             <div class="card text-center h-100" style="max-width:500px;">
               <div class="card-body">
-                <a href="#"><h4>{{ favorite.stop }}</h4></a><a href="{% url 'deleteFavoriteView' pk=favorite.pk %}" class="btn btn-sm btn-danger"><strong>Delete</strong></a>
+                <a href="{{favorite.stop.get_absolute_url}}"><h4>{{ favorite.stop }}</h4></a><a href="{% url 'deleteFavoriteView' pk=favorite.pk %}" class="btn btn-sm btn-danger"><strong>Delete</strong></a>
               </div>
             </div>
           </div>
