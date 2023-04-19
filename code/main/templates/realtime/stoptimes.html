@@ -14,7 +14,16 @@ Stop Times
 	</div>
 	<div class="col">
 		{% if stop %}
-		<h3 class="text-center pt-2 pb-2">{{ stop.stop_name }}</h3>
+            <h3 class="text-center pt-2 pb-2">
+                {{ stop.stop_name }}         
+                {% if user.is_authenticated %}
+                    {% if stop in request.user.favorites.all %}
+                        <p class="text-center">This stop is already in your favorites.</p>
+                    {% else %}
+                        <a href="{% url 'addFavoriteView' stop_id=stop.stop_id %}" class="btn btn-primary">Add to favorites</a>
+                    {% endif %}
+                {% endif %}
+            </h3>
 		{% endif %}
 		<table class="table">
 	
@@ -31,7 +40,7 @@ Stop Times
 						<tr>
 							{% if i.arrival_time is None %}
 							{%else%}
-							<td>{{i.route_short_name}}</td>
+							<td><a href="{% url 'main:routeDetails' i.route_id %}"><h4>{{i.route_short_name}}</h4></a></td>
 							<td>{{i.stop_headsign}}</td>
 							<td>{{i.arrival_time}}</td>
 							{%endif%}
@@ -39,13 +48,6 @@ Stop Times
 			  {% endfor %}
 			</tbody>
 		</table>
-        {% if user.is_authenticated %}
-            {% if stop in request.user.favorites.all %}
-                <p class="text-center">This stop is already in your favorites.</p>
-            {% else %}
-                <a href="{% url 'addFavoriteView' stop_id=stop.stop_id %}" class="btn btn-primary">Add to favorites</a>
-            {% endif %}
-        {% endif %}
 	</div>
 </div>
 

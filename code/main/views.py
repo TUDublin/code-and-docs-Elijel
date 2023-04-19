@@ -60,7 +60,7 @@ def allStopTimes(request, stop_id=None):
         filteredTimeList = [d for d in StopTimes_Dict if d['service_id'] in keyValList]
 
     '''Pagination Code'''
-    paginator = Paginator(filteredTimeList, 15)
+    paginator = Paginator(filteredTimeList, 12)
     try:
         page = int(request.GET.get('page', '1'))
     except:
@@ -190,7 +190,7 @@ def routeDetails(request, route_id):
     locations = Stop.objects.filter(stop_time__trip_id__in=trips).distinct()
 
     # Paginate stops
-    paginator = Paginator(stops, 12)
+    paginator = Paginator(stops, 13)
     page = request.GET.get('page')
     stops = paginator.get_page(page)
 
