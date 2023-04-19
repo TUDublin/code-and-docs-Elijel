@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import CustomUserCreationForm, FavoriteStopForm
+from .forms import CustomUserCreationForm
 from .models import CustomUser, Favorite
 from main.models import Stop
 from django.contrib.auth.models import Group
@@ -18,7 +18,6 @@ def addFavoriteView(request, stop_id):
     user = request.user
     stop = get_object_or_404(Stop, stop_id=stop_id)
     
-    # Check if the stop is already favorited by the user
     if Favorite.objects.filter(user=user, stop=stop).exists():
         return redirect('favoritesView')
     

@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% load static %}
+{% block metadescription %}
+Stop Times
+{% endblock %}
+{% block title %}
+Stop Times
+{% endblock %}
+{% block content %}
+  <h2>Route : {{ trips.0.route_id }} {{ trips.0.trip_headsign }}</h2>
+
+  <form method="post">
+    {% csrf_token %}
+    {% if headsigns.O %}
+        <button type="submit" name="shape_filter" value="I">{{ headsigns.O }}</button>
+    {% endif %}
+    {% if headsigns.I %}
+        <button type="submit" name="shape_filter" value="O">{{ headsigns.I }}</button>
+    {% endif %}
+</form>
+
+    <div class="row">
+        <div class="col-10">	
+            <div id="map" style="height: 850px; width: 100%;"></div>
+        </div>
+        <div class="col">
+            {% if stop %}
+            <h3 class="text-center pt-2 pb-2">{{ stop.stop_name }}</h3>
+            {% endif %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th colspan="3">
+                            <h3 class="text-center">Stops</h3>
+                            {% if stops.has_other_pages %}
+                                <ul class="pagination justify-content-center">
+                                    {% for i in stops.paginator.page_range %}
+                                        {% if stops.number == i %}
+                                            <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+                                        {% else %}
+                                            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    {% for stops in stops %}
+                            <tr>       
+                                <td class="text-center"><a href="{{stops.get_absolute_url}}">{{stops.stop_name}}</a></td>
+                                {% empty %}
+                                <td>No stops found.</td>
+                            </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+    function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 17
+        });
+
+        if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var userLocation = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+            };
+            map.setCenter(userLocation);
+            var userMarker = new google.maps.Marker({
+            position: userLocation,
+            map: map,
+            icon: 'http://maps.google.com/mapfiles/kml/pal3/icon53.png'
+            });
+            var userWindow = new google.maps.InfoWindow({
+            content: 'Your Current Location.'
+            });
+
+            // Open the user's info window
+            userWindow.open(map, userMarker);
+        }, function() {
+            // Handle error getting user location
+        });
+        } else {
+        // Geolocation is not supported by this browser
+        }
+
+        var stopLocations = [
+        {% for stops in stops %}
+            {lat: {{stops.stop_lat}}, lng: {{stops.stop_lon}}, name: "{{stops.stop_name}}", url: "{{stops.get_absolute_url}}"},
+        {% endfor %}
+        ];
+
+        var infoWindows = [];
+
+        for (var i = 0; i < stopLocations.length; i++) {
+        var marker = new google.maps.Marker({
+            position: stopLocations[i],
+            map: map,
+            icon: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png' // set the stop marker icon to red
+        });
+
+        // Create an info window for each marker
+        var infoWindow = new google.maps.InfoWindow({
+            content: '<a href="' + stopLocations[i].url + '">' + stopLocations[i].name + '</a>'
+        });
+        
+        // Add the info window to the array
+        infoWindows.push(infoWindow);
+
+        // Add an event listener to open the correct info window when the marker is clicked
+        marker.addListener('click', function() {
+            // Close any open info windows
+            for (var j = 0; j < infoWindows.length; j++) {
+            infoWindows[j].close();
+            }
+            
+            // Open the clicked marker's info window
+            var index = stopLocations.findIndex(function(location) {
+            return location.lat === this.getPosition().lat() && location.lng === this.getPosition().lng();
+            }.bind(this));
+            infoWindows[index].open(map, this);
+        });
+        }
+
+        // Add an event listener to the map to close any open info windows when the user clicks on the map
+        map.addListener('click', function() {
+        for (var j = 0; j < infoWindows.length; j++) {
+            infoWindows[j].close();
+        }
+        });
+    }
+    </script>
+
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAzrvIvbaR-QS_49R5irnOvy-sD3WmIeR0&callback=initMap">
+    </script>
+
+{% endblock %}

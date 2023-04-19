@@ -117,6 +117,108 @@ def nearby_stops(request, stop_id=None):
 def home(request):
     return render(request, 'realtime/home.html')
 
+from django.shortcuts import render
+from .models import Route, Stop, Trip
+
+
+def lol(request):
+    # Get all the Route objects
+    routes = Route.objects.all()
+
+    # Create a dictionary to store the stops for each route
+    route_stops = {}
+    for route in routes:
+        # Get all the trips associated with the Route object
+        trips = Trip.objects.filter(route_id=route)
+        # Get all the stops associated with the trips
+        stops = Stop.objects.filter(stop_time__trip_id__in=trips).distinct()
+        # Store the stops in the dictionary with the route as the key
+        route_stops[route] = stops
+
+    context = {
+        'route_stops': route_stops,
+    }
+
+    return render(request, 'realtime/route_stops.html', context)
+
+
+import datetime
+
+from django.core.paginator import Paginator
+
+def allRoutes(request):
+    # Get the current day of the week
+    today = datetime.datetime.today().weekday()
+
+    if today < 5:  # Monday to Friday
+        routes = Route.objects.filter(route_id__icontains='b')
+    else:  # Saturday or Sunday
+        routes = Route.objects.filter(route_id__icontains='d')
+    
+    # Number of routes to display per page
+    routes_per_page = 21
+
+    # Create the Paginator object
+    paginator = Paginator(routes, routes_per_page)
+
+    # Get the current page number from the query parameters
+    page_number = request.GET.get('page')
+
+    # Get the current page of routes
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+    }
+
+    return render(request, 'realtime/route_list.html', context)
+
+
+def routeDetails(request, route_id):
+    # Get all the trips associated with the Route object
+    trips = Trip.objects.filter(route_id=route_id)
+
+    # Check if the form was submitted with a shape filter
+    shape_filter = request.POST.get('shape_filter', 'O')
+    if shape_filter:
+        trips = trips.filter(shape_id__icontains=shape_filter)
+
+    # Get all the stops associated with the trips
+    stops = Stop.objects.filter(stop_time__trip_id__in=trips).distinct()
+
+    # Paginate stops
+    paginator = Paginator(stops, 15)
+    page = request.GET.get('page')
+    stops = paginator.get_page(page)
+
+    # Store the headsigns in a dictionary
+    headsigns = {
+        'I': None,
+        'O': None
+    }
+
+    for trip in trips:
+        if trip.shape_id:
+            if trip.shape_id.__contains__('O'):
+                headsigns['O'] = 'Change Direction'
+            elif trip.shape_id.__contains__('I'):
+                headsigns['I'] = 'Change Direction'
+
+    # Store the stops and headsigns in the dictionary with the route as the key
+    context = {
+        'trips': trips,
+        'stops': stops,
+        'headsigns': headsigns,
+    }
+
+    return render(request, 'realtime/route_detail.html', context)
+
+
+
+
+
+
+
 
 
 

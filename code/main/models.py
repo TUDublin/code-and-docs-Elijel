@@ -127,4 +127,3 @@ class Stop_Time(models.Model):
 
     def __str__(self):
         return self.stop_headsign
-
