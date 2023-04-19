@@ -7,16 +7,13 @@ Stop Times
 Stop Times
 {% endblock %}
 {% block content %}
-  <h2>Route : {{ trips.0.route_id }} {{ trips.0.trip_headsign }}</h2>
-  
+  <h2 class="text-center">{{ trips.0.route_id }} {{ trips.0.trip_headsign }}</h2>
+
     <div class="row">
-        <div class="col-10">	
+        <div class="col-10">    
             <div id="map" style="height: 850px; width: 100%;"></div>
         </div>
         <div class="col">
-            {% if stop %}
-            <h3 class="text-center pt-2 pb-2">{{ stop.stop_name }}</h3>
-            {% endif %}
             <table class="table">
                 <thead>
                     <tr>
@@ -34,15 +31,18 @@ Stop Times
                                     {% endfor %}
                                 </ul>
                             {% endif %}
-                            <form method="post">
+                            <form method="post" class="text-center">
                                 {% csrf_token %}
-                                {% if headsigns.O %}
-                                    <button type="submit" name="shape_filter" value="I">{{ headsigns.O }}</button>
-                                {% endif %}
-                                {% if headsigns.I %}
-                                    <button type="submit" name="shape_filter" value="O">{{ headsigns.I }}</button>
-                                {% endif %}
+                                <div class="d-flex justify-content-center">
+                                    {% if headsigns.O %}
+                                        <button type="submit" name="shape_filter" value="I" class="btn btn-primary">{{ headsigns.O }}</button>
+                                    {% endif %}
+                                    {% if headsigns.I %}
+                                        <button type="submit" name="shape_filter" value="O" class="btn btn-primary">{{ headsigns.I }}</button>
+                                    {% endif %}
+                                </div>
                             </form>
+                            
                         </th>
                     </tr>
                 </thead>

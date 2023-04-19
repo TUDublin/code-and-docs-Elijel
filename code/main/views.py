@@ -189,7 +189,7 @@ def routeDetails(request, route_id):
     locations = Stop.objects.filter(stop_time__trip_id__in=trips).distinct()
 
     # Paginate stops
-    paginator = Paginator(stops, 15)
+    paginator = Paginator(stops, 12)
     page = request.GET.get('page')
     stops = paginator.get_page(page)
 
