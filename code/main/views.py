@@ -184,7 +184,8 @@ def routeDetails(request, route_id):
         trips = trips.filter(shape_id__icontains=shape_filter)
 
     # Get all the stops associated with the trips
-    stops = Stop.objects.filter(stop_time__trip_id__in=trips).distinct()
+    stops = Stop.objects.filter(stop_time__trip_id__in=trips).distinct().order_by('stop_time__stop_sequence')
+
 
     locations = Stop.objects.filter(stop_time__trip_id__in=trips).distinct()
 
