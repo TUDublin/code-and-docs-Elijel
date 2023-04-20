@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+  {% if routes %}
+  <div class="container">
+    <h1>Destination Results</h1>
+    <h3>Routes:</h3>
+    <div class="row mx-auto">
+      {% for route in routes %}
+      <div class="my_bottom margin col-9 col-lg-4 col-sm-12 col-md-4 pt-3">
+        <div class="card text-center h-100" style="max-width:500px;">
+          <div class="card-body">
+            <a href="{% url 'main:routeDetails' route.route_id %}"><h4>{{ route }}</h4></a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No routes found.</p>
+  {% endif %}
+{% endblock %}

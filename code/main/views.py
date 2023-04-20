@@ -121,27 +121,6 @@ from django.shortcuts import render
 from .models import Route, Stop, Trip
 
 
-def lol(request):
-    # Get all the Route objects
-    routes = Route.objects.all()
-
-    # Create a dictionary to store the stops for each route
-    route_stops = {}
-    for route in routes:
-        # Get all the trips associated with the Route object
-        trips = Trip.objects.filter(route_id=route)
-        # Get all the stops associated with the trips
-        stops = Stop.objects.filter(stop_time__trip_id__in=trips).distinct()
-        # Store the stops in the dictionary with the route as the key
-        route_stops[route] = stops
-
-    context = {
-        'route_stops': route_stops,
-    }
-
-    return render(request, 'realtime/route_stops.html', context)
-
-
 import datetime
 
 from django.core.paginator import Paginator
@@ -217,6 +196,35 @@ def routeDetails(request, route_id):
 
     return render(request, 'realtime/route_detail.html', context)
 
+def destinationsearch(request):
+    return render(request, 'realtime/search.html')
+
+def destination(request):
+    if request.method == 'GET':
+        search_term = request.GET.get('search_term')
+        search_type = request.GET.get('search_type')
+
+        if search_type == 'stop_id':
+            stop_id = search_term
+        else:
+            stop_name = search_term
+            stop = Stop.objects.filter(stop_name__icontains=stop_name).first()
+            if stop is None:
+                return render(request, 'realtime/search.html', {'error_message': f"No stop found with name '{stop_name}'"})
+            stop_id = stop.stop_id
+            
+        today = datetime.datetime.today().weekday()
+
+        trips = Trip.objects.filter(stop_time__stop_id=stop_id)
+
+        if today < 5:  # Monday to Friday
+            routes = Route.objects.filter(trip__in=trips,route_id__icontains='d').distinct()
+        else:  # Saturday or Sunday
+            routes = Route.objects.filter(trip__in=trips,route_id__icontains='b').distinct()
+
+        return render(request, 'realtime/search_results.html', {'routes': routes})
+    else:
+        return render(request, 'realtime/search.html')
 
 
 

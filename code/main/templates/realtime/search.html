@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h3>DESTINATION PLANNER</h3>
+<form action="{% url 'main:destination' %}" method="get">
+  <label for="search_type">Search by:</label>
+  <select name="search_type" id="search_type">
+    <option value="stop_name">Stop Name</option>
+    <option value="stop_id">Stop ID</option>
+  </select>
+  <br><br>
+  <label for="search_term">Destination:</label>
+  <input type="text" name="search_term" id="search_term" required>
+  <br><br>
+  <button type="submit">Search</button>
+</form>
+
+{% endblock %}
