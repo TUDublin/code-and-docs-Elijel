@@ -1,60 +1,72 @@
-  {% extends "base.html" %}
-  {% load static %}
-  
-  {% block title %} 
-    {% if continent %}
-      {{ continent.name }}
-    {% else %}
-      Global
-    {% endif %}
-  {% endblock %}
-  
-  {% block content %}
-  
-  <div class="container">
-    <div class="row mx-auto">
-      {% for route in page_obj %}
-      <div class="my_bottom margin col-9 col-lg-4 col-sm-12 col-md-4 pt-3">
-        <div class="card text-center h-100" style="max-width:500px;">
-          <div class="card-body">
-            <a href="{% url 'main:routeDetails' route.route_id %}"><h4>{{ route }}</h4></a>
-          </div>
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} 
+  {% if continent %}
+    {{ continent.name }}
+  {% else %}
+    Global
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <div class="row mx-auto">
+    {% for route in page_obj %}
+    <div class="my_bottom margin col-9 col-lg-4 col-sm-12 col-md-4 pt-3">
+      <div class="card text-center h-100" style="max-width:500px;">
+        <div class="card-body">
+          <a href="{% url 'main:routeDetails' route.route_id %}"><h4>{{ route }}</h4></a>
         </div>
       </div>
-      {% endfor %}
     </div>
-  
-    {% if page_obj.has_other_pages %}
-    <div class="pagination d-flex justify-content-center pt-3">
-      <ul class="pagination">
-        {% if page_obj.has_previous %}
-        <li class="page-item">
-          <a class="page-link" href="?page=1" tabindex="-1" aria-disabled="true">&laquo; first</a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&lsaquo; previous</a>
-        </li>
-        {% endif %}
-  
-        <li class="page-item active" aria-current="page">
-          <span class="page-link">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-            <span class="sr-only">(current)</span>
-          </span>
-        </li>
-  
-        {% if page_obj.has_next %}
-        <li class="page-item">
-          <a class="page-link" href="?page={{ page_obj.next_page_number }}">next &rsaquo;</a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-        </li>
-        {% endif %}
-      </ul>
-    </div>
+    {% endfor %}
+  </div>
+
+  {% if page_obj.has_other_pages %}
+  <div class="pagination d-flex justify-content-center pt-3">
+    <ul class="pagination">
+      {% if page_obj.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page=1" tabindex="-1" aria-disabled="true">&laquo; first</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&lsaquo; previous</a>
+      </li>
+      {% endif %}
+
+      <li class="page-item active" aria-current="page">
+        <span class="page-link">
+          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+          <span class="sr-only">(current)</span>
+        </span>
+      </li>
+
+      {% if page_obj.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.next_page_number }}">next &rsaquo;</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+      </li>
+      {% endif %}
+    </ul>
   </div>
   {% endif %}
+
+  <style>
+    @media (max-width: 767.98px) {
+      .my_bottom {
+        margin-bottom: 0.2em;
+      }
+      .margin {
+        margin-right: auto !important;
+        margin-left: auto !important;
+      }
+    }
+  </style>
   
-  {% endblock %}
-  
+</div>
+
+{% endblock %}

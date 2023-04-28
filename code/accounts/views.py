@@ -53,7 +53,7 @@ def signinView(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('main:allStops')
+                return redirect('main:home')
             else:
                 return redirect('signup')
     else:

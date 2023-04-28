@@ -7,19 +7,17 @@
 {% block content %}
 	<div class="container">
 		<br>
-			<h1 class="my_title text-dark text-center">Login or Create a New Account</h1>
+			<h1 id="header" class="text-dark text-center">Login or Create a New Account</h1>
 		<br>
 		<div class="row">
 			<div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center my_custom_div">
-				<br>
-				<h2 class="my_title text-dark">New Customer?</h2>
-				<br>
+				<h2 class="text-dark h4">New Customer?</h2>
 				<a href="{% url 'signup' %}" class="btn btn-secondary">Create New Account</a>
 			</div>
 			<div class="col-12 col-sm-12 col-md-12 col-lg-6 bg-light">
 				<div>
 					<br>
-					<h2 class="my_title">Registered Customers Only</h2>
+					<h2 class="h4">Registered Customers Only</h2>
 					<form method="post">
 						{% csrf_token %}
 						<p>{{ form | crispy }}</p>
@@ -32,5 +30,17 @@
 		<br>
 	</div>
 	<br>
+
+<style>
+	@media (max-width: 767px) {
+		.my_custom_div {
+		  margin-bottom: 30px;
+		}
+		#header {
+          font-size: 1.5rem;
+      }
+	  }
+</style>
 {% endblock %}
+
 
