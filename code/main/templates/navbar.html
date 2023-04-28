@@ -20,11 +20,6 @@
               <a href="{% url 'signin' %}" class="text-light pl-3">Sign In <i class="fas fa-sign-in-alt text-light"></i></a>
           {% endif %}
           </div>
-          <form class="form-inline" action="{% url 'searchstop:searchResult' %}" method="get">
-            {% csrf_token %}
-            <input class="form-control bg-light col-9 ml-3" type="search" placeholder="Search by Stop" aria-label="Search" name="q">
-            <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
-          </form>
       </div>
     </div>
 </nav>

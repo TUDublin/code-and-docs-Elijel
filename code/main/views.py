@@ -181,7 +181,7 @@ def routeDetails(request, route_id):
     return render(request, 'Route/route_detail.html', context)
 
 def destinationsearch(request):
-    return render(request, 'realtime/search.html')
+    return render(request, 'Destination/search.html')
 
 def destination(request):
     if request.method == 'GET':

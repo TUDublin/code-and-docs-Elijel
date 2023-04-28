@@ -13,12 +13,22 @@
   <p>{{ error_message }}</p>
 {% endif %}
 <div class="container">
-  <div class="row justify-content-center mt-3">
+  <div class="row justify-content-center mt-2">
+    <div class="col-md-10 col-sm-6">
+      <a href="{% url 'main:destinationsearch'%}">
+        <div class="box bg-success box-favorites">
+          <i class="fa fa-map-marker-alt fa-5x"></i>
+          <h3 class="pl-3">Destination Search</h3>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="row justify-content-center">
     <div class="col-md-5 col-sm-6">
       <a href="{% url 'main:allRoutes' %}">
         <div class="box bg-primary">
           <i class="fa fa-bus fa-5x"></i>
-          <h3>Routes</h3>
+          <h3 class="pl-3">Routes</h3>
         </div>
       </a>
     </div>
@@ -26,7 +36,7 @@
       <a href="{% url 'main:allStops' %}">
         <div class="box bg-danger">
           <i class="fa fa-sign fa-5x"></i>
-          <h3>Stops</h3>
+          <h3 class="pl-3">Stops</h3>
         </div>
       </a>
     </div>
@@ -40,7 +50,7 @@
     {%endif%}
         <div class="box bg-warning">
           <i class="fa fa-star fa-5x"></i>
-          <h3>Favourites</h3>
+          <h3 class="pl-3">Favourites</h3>
         </div>
       </a>
     </div>
@@ -48,7 +58,7 @@
       <a href="{% url 'main:nearby_stops' %}">
         <div class="box bg-info">
           <i class="fa fa-map-marker fa-5x"></i>
-          <h3>Nearby Stops</h3>
+          <h3 class="pl-3">Nearby Stops</h3>
         </div>
       </a>
     </div>
@@ -71,6 +81,9 @@
       .box {
         height: 300px;
         font-size: 24px;
+      }
+      .box-favorites {
+      max-height: 150px;
       }
     }
 
