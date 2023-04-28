@@ -106,31 +106,22 @@ def home(request):
     return render(request, 'Home/home.html')
 
 def allRoutes(request):
-    # Get the current day of the week
     today = datetime.datetime.today().weekday()
 
-    if today < 5:  # Monday to Friday
+    if today < 5: 
         routes = Route.objects.filter(route_id__icontains='b')
-    else:  # Saturday or Sunday
+    else:  
         routes = Route.objects.filter(route_id__icontains='d')
     
-    # Get the search query from the GET parameters
     search_query = request.GET.get('search')
 
     if search_query:
-        # Filter the routes by the search query
         routes = routes.filter(route_id__icontains=search_query)
 
-    # Number of routes to display per page
     routes_per_page = 21
-
-    # Create the Paginator object
     paginator = Paginator(routes, routes_per_page)
-
-    # Get the current page number from the query parameters
     page_number = request.GET.get('page')
 
-    # Get the current page of routes
     page_obj = paginator.get_page(page_number)
 
     context = {
