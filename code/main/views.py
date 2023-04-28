@@ -58,7 +58,7 @@ def allStopTimes(request, stop_id=None):
         except (EmptyPage, InvalidPage):
             filteredTimeLists = paginator.page(paginator.num_pages)
         
-        return render(request, 'realtime/stoptimes.html', {'stop': c_page, 'stop_time_list': filteredTimeLists, 'stop_lat': stop_lat, 'stop_lon': stop_lon})
+        return render(request, 'Stops/stoptimes.html', {'stop': c_page, 'stop_time_list': filteredTimeLists, 'stop_lat': stop_lat, 'stop_lon': stop_lon})
 
 def allStops(request, stop_id=None):
     c_page = None
@@ -79,7 +79,7 @@ def allStops(request, stop_id=None):
         stop_lists = paginator.page(page)
     except (EmptyPage, InvalidPage):
         stop_lists = paginator.page(paginator.num_pages)
-    return render(request,'realtime/stop.html',{'stops':c_page,'stop_lists':stop_lists})
+    return render(request,'Stops/stop.html',{'stops':c_page,'stop_lists':stop_lists})
 
 def nearby_stops(request, stop_id=None):
     c_page = None
@@ -100,10 +100,10 @@ def nearby_stops(request, stop_id=None):
         stop_lists = paginator.page(page)
     except (EmptyPage, InvalidPage):
         stop_lists = paginator.page(paginator.num_pages)
-    return render(request,'realtime/nearby_stops.html',{'stops':c_page,'stop_lists':stop_lists})
+    return render(request,'NearbyStops/nearby_stops.html',{'stops':c_page,'stop_lists':stop_lists})
 
 def home(request):
-    return render(request, 'realtime/home.html')
+    return render(request, 'Home/home.html')
 
 def allRoutes(request):
     # Get the current day of the week
@@ -130,7 +130,7 @@ def allRoutes(request):
         'page_obj': page_obj,
     }
 
-    return render(request, 'realtime/route_list.html', context)
+    return render(request, 'Route/route_list.html', context)
 
 def routeDetails(request, route_id):
     # Get all the trips associated with the Route object
@@ -173,7 +173,7 @@ def routeDetails(request, route_id):
         'locations' : locations
     }
 
-    return render(request, 'realtime/route_detail.html', context)
+    return render(request, 'Route/route_detail.html', context)
 
 def destinationsearch(request):
     return render(request, 'realtime/search.html')
@@ -189,7 +189,7 @@ def destination(request):
             stop_name = search_term
             stop = Stop.objects.filter(stop_name__icontains=stop_name).first()
             if stop is None:
-                return render(request, 'realtime/search.html', {'error_message': f"No stop found with name '{stop_name}'"})
+                return render(request, 'Destination/search.html', {'error_message': f"No stop found with name '{stop_name}'"})
             stop_id = stop.stop_id
             
         today = datetime.datetime.today().weekday()
@@ -201,9 +201,9 @@ def destination(request):
         else:  # Saturday or Sunday
             routes = Route.objects.filter(trip__in=trips,route_id__icontains='b').distinct()
 
-        return render(request, 'realtime/search_results.html', {'routes': routes})
+        return render(request, 'Destination/search_results.html', {'routes': routes})
     else:
-        return render(request, 'realtime/search.html')
+        return render(request, 'Destination/search.html')
 
 
 
@@ -269,4 +269,4 @@ def test(request):
                     rt_stop_id = (response["Entity"][each]["TripUpdate"]["StopTimeUpdate"][items]["StopId"]) #StopId
                     realtimedict.append(list({'rt_trip_id': rt_trip_id, 'rt_route_id':rt_route_id, 'rt_schedule':rt_schedule, 'rt_stop_sequence':rt_stop_sequence, 'rt_stop_id':rt_stop_id}))
  
-    return render(request,'realtime/test.html',({'response':response, 'result':realtimedict}))
+    return render(request,'Base/test.html',({'response':response, 'result':realtimedict}))
