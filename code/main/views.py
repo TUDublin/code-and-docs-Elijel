@@ -6,7 +6,6 @@ import datetime
 from django.db.models import Q
 from django.shortcuts import render
 
-
 def allStopTimes(request, stop_id=None):
     now = datetime.datetime.now()
     c_page = None
@@ -16,16 +15,13 @@ def allStopTimes(request, stop_id=None):
         stop_lat = c_page.stop_lat
         stop_lon = c_page.stop_lon
         
-        # use select_related to reduce database queries
         stop_time_list = Stop_Time.objects.filter(
             Q(stop_id=c_page),
             Q(arrival_time__gte=now) | Q(departure_time__gte=now)
         ).select_related('trip_id__route_id', 'trip_id__service_id')
         
-        # create a list of dictionaries containing all stop times
         stop_times = []
         for st in stop_time_list:
-            # check if the arrival or departure time is due now
             if st.arrival_time == now or st.departure_time == now:
                 due_now = True
             else:
@@ -42,12 +38,10 @@ def allStopTimes(request, stop_id=None):
                 'route_short_name': st.trip_id.route_id.route_short_name,
                 'due_now': due_now  # add a 'due_now' flag to the dictionary
             })
-        
-        # filter stop times by service_id
+
         keyValList = ['2']
         filteredTimeList = [st for st in stop_times if st['service_id'] in keyValList]
         
-        # paginate the stop times
         paginator = Paginator(filteredTimeList, 12)
         try:
             page = int(request.GET.get('page', '1'))
@@ -138,26 +132,20 @@ def allRoutes(request):
 
 
 def routeDetails(request, route_id):
-    # Get all the trips associated with the Route object
     trips = Trip.objects.filter(route_id=route_id)
 
-    # Check if the form was submitted with a shape filter
     shape_filter = request.POST.get('shape_filter', 'O')
     if shape_filter:
         trips = trips.filter(shape_id__icontains=shape_filter)
 
-    # Get all the stops associated with the trips
     stops = Stop.objects.filter(stop_time__trip_id__in=trips).distinct().order_by('stop_time__stop_sequence')
-
 
     locations = Stop.objects.filter(stop_time__trip_id__in=trips).distinct()
 
-    # Paginate stops
     paginator = Paginator(stops, 13)
     page = request.GET.get('page')
     stops = paginator.get_page(page)
 
-    # Store the headsigns in a dictionary
     headsigns = {
         'I': None,
         'O': None
@@ -170,7 +158,6 @@ def routeDetails(request, route_id):
             elif trip.shape_id.__contains__('I'):
                 headsigns['I'] = 'Change Direction'
 
-    # Store the stops and headsigns in the dictionary with the route as the key
     context = {
         'trips': trips,
         'stops': stops,

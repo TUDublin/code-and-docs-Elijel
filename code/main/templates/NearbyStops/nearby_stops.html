@@ -8,8 +8,6 @@
 	{% endif %}
 {% endblock %}
 {% block content %}
-	<!--Breadcrumb navigation-->
-
   <div class="container">
     <div class="row justify-content-center text-center pr-4">
       <div class="col-md-12 col-sm-6">
@@ -22,8 +20,6 @@
     <div class="col-md-12">
       <div id="map" style="height: 850px; width: 100%;"></div>
     </div>
-    
-
 	<script>
   function initMap() {
     var map = new google.maps.Map(document.getElementById('map'), {
@@ -46,13 +42,10 @@
           content: 'Your Current Location.'
         });
 
-        // Open the user's info window
         userWindow.open(map, userMarker);
       }, function() {
-        // Handle error getting user location
       });
     } else {
-      // Geolocation is not supported by this browser
     }
 
     var stopLocations = [
@@ -67,25 +60,20 @@
       var marker = new google.maps.Marker({
         position: stopLocations[i],
         map: map,
-        icon: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png' // set the stop marker icon to red
+        icon: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png' 
       });
 
-      // Create an info window for each marker
       var infoWindow = new google.maps.InfoWindow({
         content: '<a href="' + stopLocations[i].url + '">' + stopLocations[i].name + '</a>'
       });
       
-      // Add the info window to the array
       infoWindows.push(infoWindow);
 
-      // Add an event listener to open the correct info window when the marker is clicked
       marker.addListener('click', function() {
-        // Close any open info windows
         for (var j = 0; j < infoWindows.length; j++) {
           infoWindows[j].close();
         }
         
-        // Open the clicked marker's info window
         var index = stopLocations.findIndex(function(location) {
           return location.lat === this.getPosition().lat() && location.lng === this.getPosition().lng();
         }.bind(this));
@@ -93,7 +81,6 @@
       });
     }
 
-    // Add an event listener to the map to close any open info windows when the user clicks on the map
     map.addListener('click', function() {
       for (var j = 0; j < infoWindows.length; j++) {
         infoWindows[j].close();

@@ -1,161 +1,154 @@
 {% extends "base.html" %}
 {% load static %}
+
 {% block metadescription %}
 Stop Times
 {% endblock %}
+
 {% block title %}
 Stop Times
 {% endblock %}
-{% block content %}
-<h2 id="header" class="text-center">{{ trips.0.route_id }} {{ trips.0.trip_headsign }}</h2>
-<style>
-  #map {
-      width: 100%;
-      height: 850px;
-  }
 
-  /* Media query for smaller screens */
-  @media (max-width: 768px) {
-      #header {
-          font-size: 1.5rem;
-      }
-      #map {
-          height: 500px;
-      }
+{% block content %}
+
+<h2 id="header" class="text-center">{{ trips.0.route_id }} {{ trips.0.trip_headsign }}</h2>
+
+<div class="row">
+  <div class="col-md-10">    
+    <div id="map"></div>
+  </div>
+  <div class="col-md-2">
+    <table class="table">
+      <thead>
+        <tr>
+          <th colspan="3">   
+            <h3 class="text-center">Stops List</h3>
+            {% if stops.has_other_pages %}
+            <ul class="pagination justify-content-center">
+              {% for i in stops.paginator.page_range %}
+              {% if stops.number == i %}
+              <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+              {% else %}
+              <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+              {% endif %}
+              {% endfor %}
+            </ul>
+            {% endif %}
+            <form method="post" class="text-center">
+              {% csrf_token %}
+              <div class="d-flex justify-content-center">
+                {% if headsigns.O %}
+                <button type="submit" name="shape_filter" value="I" class="btn btn-primary">{{ headsigns.O }}</button>
+                {% endif %}
+                {% if headsigns.I %}
+                <button type="submit" name="shape_filter" value="O" class="btn btn-primary">{{ headsigns.I }}</button>
+                {% endif %}
+              </div>
+            </form>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for stop in stops %}
+        <tr>       
+          <td class="text-center"><a href="{{stop.get_absolute_url}}">{{stop.stop_name}}</a></td>
+          {% empty %}
+          <td>No stops found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<style>
+  a:hover {
+    text-decoration: none;
+    color: none;
   }
-  
 </style>
-    <div class="row">
-        <div class="col-md-10">    
-            <div id="map"></div>
-        </div>
-        <div class="col-md-2">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th colspan="3">   
-                            <h3 class="text-center">Stops List</h3>
-                            {% if stops.has_other_pages %}
-                                <ul class="pagination justify-content-center">
-                                    {% for i in stops.paginator.page_range %}
-                                        {% if stops.number == i %}
-                                            <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
-                                        {% else %}
-                                            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
-                                        {% endif %}
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
-                            <form method="post" class="text-center">
-                                {% csrf_token %}
-                                <div class="d-flex justify-content-center">
-                                    {% if headsigns.O %}
-                                        <button type="submit" name="shape_filter" value="I" class="btn btn-primary">{{ headsigns.O }}</button>
-                                    {% endif %}
-                                    {% if headsigns.I %}
-                                        <button type="submit" name="shape_filter" value="O" class="btn btn-primary">{{ headsigns.I }}</button>
-                                    {% endif %}
-                                </div>
-                            </form>
-                            
-                        </th>
-                    </tr>
-                </thead>
-                
-                <tbody>
-                    {% for stop in stops %}
-                            <tr>       
-                                <td class="text-center"><a href="{{stop.get_absolute_url}}">{{stop.stop_name}}</a></td>
-                                {% empty %}
-                                <td>No stops found.</td>
-                            </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    
-    <script>
-        function initMap() {
-          var map = new google.maps.Map(document.getElementById('map'), {});
-        
-          var stopLocations = [
-            {% for stops in locations %}
-            {lat: {{stops.stop_lat}}, lng: {{stops.stop_lon}}, name: "{{stops.stop_name}}", url: "{{stops.get_absolute_url}}"},
-            {% endfor %}
-          ];
-        
-          var bounds = new google.maps.LatLngBounds();
-          var infoWindows = [];
-        
-          // Add user location marker
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
+<script>
+  function initMap() {
+      var map = new google.maps.Map(document.getElementById('map'), {});
+  
+      var stopLocations = [
+          {% for stops in locations %}
+          {lat: {{stops.stop_lat}}, lng: {{stops.stop_lon}}, name: "{{stops.stop_name}}", url: "{{stops.get_absolute_url}}"},
+          {% endfor %}
+      ];
+  
+      var bounds = new google.maps.LatLngBounds();
+      var infoWindows = [];
+  
+      if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
               var userLocation = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
+                  lat: position.coords.latitude,
+                  lng: position.coords.longitude
               };
-            // Add marker for user's location
-            var userMarker = new google.maps.Marker({
-                position: userLocation,
-                map: map,
-				icon: 'http://maps.google.com/mapfiles/kml/pal3/icon53.png',
-                title: 'Your Location'
-            });
+  
+              var userMarker = new google.maps.Marker({
+                  position: userLocation,
+                  map: map,
+                  icon: 'http://maps.google.com/mapfiles/kml/pal3/icon53.png',
+                  title: 'Your Location'
+              });
               bounds.extend(userMarker.getPosition());
-            });
-          }
-        
-          // Add stop markers
-          for (var i = 0; i < stopLocations.length; i++) {
-            var marker = new google.maps.Marker({
+          });
+      }
+  
+      for (var i = 0; i < stopLocations.length; i++) {
+          var marker = new google.maps.Marker({
               position: stopLocations[i],
               map: map,
               icon: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png'
-            });
-        
-            // Create an info window for each marker
-            var infoWindow = new google.maps.InfoWindow({
+          });
+  
+          var infoWindow = new google.maps.InfoWindow({
               content: '<a href="' + stopLocations[i].url + '">' + stopLocations[i].name + '</a>'
-            });
-        
-            // Add the info window to the array
-            infoWindows.push(infoWindow);
-        
-            // Add an event listener to open the correct info window when the marker is clicked
-            marker.addListener('click', function() {
-              // Close any open info windows
+          });
+  
+          infoWindows.push(infoWindow);
+  
+          marker.addListener('click', function() {
               for (var j = 0; j < infoWindows.length; j++) {
-                infoWindows[j].close();
+                  infoWindows[j].close();
               }
-        
-              // Open the clicked marker's info window
+  
               var index = stopLocations.findIndex(function(location) {
-                return location.lat === this.getPosition().lat() && location.lng === this.getPosition().lng();
+                  return location.lat === this.getPosition().lat() && location.lng === this.getPosition().lng();
               }.bind(this));
               infoWindows[index].open(map, this);
-            });
-        
-            // Extend the bounds to include the current marker's position
-            bounds.extend(marker.getPosition());
-          }
-        
-          // Center the map to fit all the markers within the bounds
-          map.fitBounds(bounds);
-        
-          // Add an event listener to the map to close any open info windows when the user clicks on the map
-          map.addListener('click', function() {
-            for (var j = 0; j < infoWindows.length; j++) {
-              infoWindows[j].close();
-            }
           });
-        }
-        </script>
-        
-        
+  
+          bounds.extend(marker.getPosition());
+      }
+  
+      map.fitBounds(bounds);
+  
+      map.addListener('click', function() {
+          for (var j = 0; j < infoWindows.length; j++) {
+              infoWindows[j].close();
+          }
+      });
+  }
+</script>
+<script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAzrvIvbaR-QS_49R5irnOvy-sD3WmIeR0&callback=initMap">
+</script>
 
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAzrvIvbaR-QS_49R5irnOvy-sD3WmIeR0&callback=initMap">
-    </script>
+<style>
+  #map {
+    width: 100%;
+    height: 850px;
+  }
+  @media (max-width: 768px) {
+  #header {
+  font-size: 1.5rem;
+  }
+  #map {
+  height: 500px;
+  }
+  }
+</style>
 
 {% endblock %}

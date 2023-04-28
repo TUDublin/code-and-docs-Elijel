@@ -1,25 +1,26 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Ninth navbar example">
-    <div class="container-xl">
-      <a class="navbar-brand" href="{% url 'main:home' %}">DB BusApp</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-      </ul>
-          <div>
-            {% if user.is_authenticated %}
-            <div class="text-light">
-              <a class="fas fa-user-circle"></a>
-              <a href="#" class="text-light mr-3">{{ user.username }}</a>
-              <a href="{% url 'signout' %}" class="text-light">Sign Out <i class="fas fa-sign-out-alt text-light"></i></a>
-            </div>
-          {% else %}
-              <a href="{% url 'signup' %}" class="text-light">Sign Up <i class="fas fa-user-plus text-light"></i></a>
-              <a href="{% url 'signin' %}" class="text-light pl-3">Sign In <i class="fas fa-sign-in-alt text-light"></i></a>
-          {% endif %}
+  <div class="container-xl">
+    <a class="navbar-brand text-white" href="{% url 'main:home' %}">DB BusApp</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          {% if user.is_authenticated %}
+          <div class="nav-link">
+            <a class="fas fa-user-circle text-light"></a>
+            <a href="#" class="text-light">{{ user.username }}</a>
+            <a href="{% url 'signout' %}" class="text-light ml-3">Sign Out <i class="fas fa-sign-out-alt text-light"></i></a>
           </div>
-      </div>
+          {% else %}
+          <div class="nav-link">
+            <a href="{% url 'signup' %}" class="text-light">Sign Up <i class="fas fa-user-plus ml-2 text-light"></i></a>
+            <a href="{% url 'signin' %}" class="text-light ml-3">Sign In <i class="fas fa-sign-in-alt text-light"></i></a>
+          </div>
+          {% endif %}
+        </li>
+      </ul>
     </div>
-</nav>
+  </div>
+</nav> 

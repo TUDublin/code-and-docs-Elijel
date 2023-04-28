@@ -71,6 +71,13 @@ Stop Times
         </table>
     </div>
 </div>
+<style>
+    a:hover {
+      text-decoration: none;
+      color: none;
+    }
+</style>
+
 <script>
     
 function initMap() {
@@ -78,10 +85,8 @@ function initMap() {
     var lng = {{stop_lon}};
     var stopLocation = {lat: lat, lng: lng};
 
-    // Check if geolocation is supported
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
-            // Use user's current location as center of map
             var userLocation = {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
@@ -91,7 +96,6 @@ function initMap() {
                 center: stopLocation
             });
 
-            // Add marker for user's location
             var userMarker = new google.maps.Marker({
                 position: userLocation,
                 map: map,
@@ -99,41 +103,34 @@ function initMap() {
                 title: 'Your Location'
             });
 
-            // Add marker for stop location
             var stopMarker = new google.maps.Marker({
                 position: stopLocation,
                 map: map,
                 title: '{{ stop.stop_name }}'
             });
 
-            // Create info window for stop marker
             var stopInfoWindow = new google.maps.InfoWindow({
                 content: '<h5>{{ stop.stop_name }}</h5>'
             });
 
-            // Open info window for stop marker by default
             stopInfoWindow.open(map, stopMarker);
         });
     } else {
-        // Geolocation not supported
         var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 18,
             center: stopLocation
         });
 
-        // Add marker for stop location
         var stopMarker = new google.maps.Marker({
             position: stopLocation,
             map: map,
             title: '{{ stop.stop_name }}'
         });
 
-        // Create info window for stop marker
         var stopInfoWindow = new google.maps.InfoWindow({
             content: '<h5>{{ stop.stop_name }}</h5>'
         });
 
-        // Open info window for stop marker by default
         stopInfoWindow.open(map, stopMarker);
     }
 }
