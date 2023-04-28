@@ -9,11 +9,20 @@
 {% endblock %}
 {% block content %}
 	<!--Breadcrumb navigation-->
-	<div>
-		<h1 class="text-center">Nearby Stops</h1>
-	</div>
-  
-	<div id="map" style="height: 850px; width: 100%;"></div>
+
+  <div class="container">
+    <div class="row justify-content-center text-center pr-4">
+      <div class="col-md-12 col-sm-6">
+        <div class="box bg-info box-favorites">
+          <i class="fa fa-map-marker-alt fa-5x"></i>
+          <h3 class="pl-3">Nearby Stops</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div id="map" style="height: 850px; width: 100%;"></div>
+    </div>
+    
 
 	<script>
   function initMap() {
@@ -95,5 +104,33 @@
 	<script async defer
 	  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAzrvIvbaR-QS_49R5irnOvy-sD3WmIeR0&callback=initMap">
 	</script>
+
+<style>
+  .box {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 200px;
+      background-color: gray;
+      margin: 10px;
+      font-size: 18px;
+      color: white;
+  }
+  @media only screen and (min-width: 768px) {
+    .box {
+      height: 300px;
+      font-size: 24px;
+    }
+    .box-favorites {
+    max-height: 150px;
+    }
+  }
+
+  a:hover {
+    text-decoration: none;
+    color: inherit;
+  }
+</style>
 {% endblock %}
 </html>

@@ -6,8 +6,17 @@
 {% endblock %}
 
 {% block content %}
-
 <div class="container">
+  <div class="row justify-content-center text-center mt-2 pr-4">
+    <div class="col-md-12 col-sm-6">
+      <a href="{% url 'main:allRoutes' %}">
+        <div class="box bg-primary box-favorites">
+          <i class="fa fa-bus fa-5x"></i>
+          <h3 class="pl-3">Routes</h3>
+        </div>
+      </a>
+    </div>
+  </div>
   <form method="GET" action="{% url 'main:allRoutes' %}">
     <div class="input-group mb-3 pt-3">
       <input type="text" class="form-control py-4" placeholder="Search For Routes" name="search">
@@ -78,7 +87,33 @@
       padding-top: 2rem;
       padding-bottom: 2rem;
     }
-  </style>
+
+  .box {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 200px;
+      background-color: gray;
+      margin: 10px;
+      font-size: 18px;
+      color: white;
+  }
+  @media only screen and (min-width: 768px) {
+    .box {
+      height: 300px;
+      font-size: 24px;
+    }
+    .box-favorites {
+    max-height: 150px;
+    }
+  }
+
+  a:hover {
+    text-decoration: none;
+    color: inherit;
+  }
+</style
   
 </div>
 
