@@ -8,49 +8,69 @@ Stop Times
 {% endblock %}
 {% block content %}
 
+<style>
+    #map {
+        width: 100%;
+        height: 850px;
+    }
+
+    /* Media query for smaller screens */
+    @media (max-width: 768px) {
+        #map {
+            height: 500px;
+        }
+    }
+</style>
+
+
 <div class="row">
-	<div class="col-7">	
-		<div id="map" style="height: 850px; width: 100%;"></div>
-	</div>
-	<div class="col">
-		{% if stop %}
+    <div class="col-md-7">   
+        <div id="map"></div>
+    </div>
+    <div class="col-md-5">
+        {% if stop %}
             <h3 class="text-center pt-2 pb-2">
                 {{ stop.stop_name }}         
                 {% if user.is_authenticated %}
                     {% if stop.stop_id in request.user.favorites.all %}
                         <p class="text-center">This stop is already in your favorites.</p>
                     {% else %}
-                        <a href="{% url 'addFavoriteView' stop_id=stop.stop_id %}" class="btn btn-primary">Add to favorites</a>
+                    <a href="{% url 'addFavoriteView' stop_id=stop.stop_id %}" class="btn btn-warning"><i class="fa fa-star"></i></a>
                     {% endif %}
                 {% endif %}
             </h3>
-		{% endif %}
-		<table class="table">
-	
-			<thead>
-			  <tr>
-				<th class="col-1">ROUTE</th>
-				<th class="col-1">DIRECTION</th>
-				<th class="col-1">DUE</th>
-			  </tr>
-			</thead>
-		
-			<tbody>
-				{% for i in stop_time_list %}
-						<tr>
-							{% if i.arrival_time is None %}
-							{%else%}
-							<td><a href="{% url 'main:routeDetails' i.route_id %}"><h4>{{i.route_short_name}}</h4></a></td>
-							<td>{{i.stop_headsign}}</td>
-							<td>{{i.arrival_time}}</td>
-							{%endif%}
-						</tr>
-			  {% endfor %}
-			</tbody>
-		</table>
-	</div>
+        {% endif %}
+        <table class="table">
+    
+            <thead>
+              <tr>
+                <th class="col-1">ROUTE</th>
+                <th class="col-1">DIRECTION</th>
+                <th class="col-1">DUE</th>
+              </tr>
+            </thead>
+        
+            <tbody>
+                {% for i in stop_time_list %}
+                    <tr>
+                        {% if i.arrival_time is None %}
+                        {%else%}
+                        <td><a href="{% url 'main:routeDetails' i.route_id %}"><h4>{{i.route_short_name}}</h4></a></td>
+                        <td>{{i.stop_headsign}}</td>
+                        <td>
+                            {% if i.arrival_time == stop_time %}
+                                <p>Due now</p>
+                            {% else %}
+                                {{i.arrival_time}}
+                            {% endif %}
+                        </td>
+                        {% endif %}
+                    </tr>
+              {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
-
 <script>
     
 function initMap() {

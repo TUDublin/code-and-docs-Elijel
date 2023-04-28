@@ -4,16 +4,9 @@ from .models import Stop, Stop_Time, Trip, Route
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 import datetime
 from django.db.models import Q
-from .tasks import Convert
 from django.shortcuts import render
-from .models import Stop, Stop_Time
 
-#Convert List to Dict
-def Convert(a):
-    it = iter(a)
-    res_dct = dict(zip(it, it))
-    return res_dct
-    
+
 def allStopTimes(request, stop_id=None):
     now = datetime.datetime.now()
     c_page = None
@@ -22,55 +15,50 @@ def allStopTimes(request, stop_id=None):
         c_page = get_object_or_404(Stop, stop_id=stop_id)
         stop_lat = c_page.stop_lat
         stop_lon = c_page.stop_lon
-        stop_time_list = Stop_Time.objects.filter(Q(stop_id=c_page, arrival_time__gte=now))
         
-        # get api objects
-        route_list = list(Route.objects.values_list('route_id', 'route_short_name'))
-        trip_lists = list(Trip.objects.values_list('service_id', 'trip_id', 'route_id'))
-        stoptimes_servicelist = list(stop_time_list.values_list('stop_sequence','trip_id', 'arrival_time', 'stop_headsign'))
+        # use select_related to reduce database queries
+        stop_time_list = Stop_Time.objects.filter(
+            Q(stop_id=c_page),
+            Q(arrival_time__gte=now) | Q(departure_time__gte=now)
+        ).select_related('trip_id__route_id', 'trip_id__service_id')
         
-        # Add route_short_name to any matching trip_id from stop_times == trip
-        for item1 in route_list:
-            for i in range(len(trip_lists)):
-                if item1[0] == trip_lists[i][2]:
-                    trip_lists[i] = trip_lists[i] + (item1[1],)
+        # create a list of dictionaries containing all stop times
+        stop_times = []
+        for st in stop_time_list:
+            # check if the arrival or departure time is due now
+            if st.arrival_time == now or st.departure_time == now:
+                due_now = True
+            else:
+                due_now = False
+                
+            stop_times.append({
+                'stop_sequence': st.stop_sequence,
+                'trip_id': st.trip_id.trip_id,
+                'arrival_time': st.arrival_time,
+                'departure_time': st.departure_time,
+                'stop_headsign': st.stop_headsign,
+                'service_id': st.trip_id.service_id.service_id,
+                'route_id': st.trip_id.route_id.route_id,
+                'route_short_name': st.trip_id.route_id.route_short_name,
+                'due_now': due_now  # add a 'due_now' flag to the dictionary
+            })
         
-        # Add Service ID to any matching Trip ID from stop_times == trip
-        for item1 in trip_lists:
-            for i in range(len(stoptimes_servicelist)):
-                if item1[1] == stoptimes_servicelist[i][1]:
-                    stoptimes_servicelist[i] = stoptimes_servicelist[i] + (item1[0],) + (item1[2],) + (item1[3],)
-        
-        # Add Api stuff to stop_times_servicelist with matching trip_id + stop_sequence
-        converted_list = [list(tup) for tup in stoptimes_servicelist]
-        StopTimes_Dict = []
-        
-        for row in converted_list:
-            row.insert(0, 'stop_sequence')
-            row.insert(2, 'trip_id')
-            row.insert(4, 'arrival_time')
-            row.insert(6, 'stop_headsign')
-            row.insert(8, 'service_id')
-            row.insert(10, 'route_id')
-            row.insert(12, 'route_short_name')
-            StopTimes_Dict.append(Convert(row))
-
-        #Filter
+        # filter stop times by service_id
         keyValList = ['2']
-        filteredTimeList = [d for d in StopTimes_Dict if d['service_id'] in keyValList]
-
-    '''Pagination Code'''
-    paginator = Paginator(filteredTimeList, 12)
-    try:
-        page = int(request.GET.get('page', '1'))
-    except:
-        page = 1
-    try:
-        filteredTimeLists = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        filteredTimeLists = paginator.page(paginator.num_pages)
+        filteredTimeList = [st for st in stop_times if st['service_id'] in keyValList]
         
-    return render(request,'realtime/stoptimes.html',{'stop':c_page, 'stop_time_list':filteredTimeLists, 'stop_lat': stop_lat, 'stop_lon': stop_lon})
+        # paginate the stop times
+        paginator = Paginator(filteredTimeList, 12)
+        try:
+            page = int(request.GET.get('page', '1'))
+        except:
+            page = 1
+        try:
+            filteredTimeLists = paginator.page(page)
+        except (EmptyPage, InvalidPage):
+            filteredTimeLists = paginator.page(paginator.num_pages)
+        
+        return render(request, 'realtime/stoptimes.html', {'stop': c_page, 'stop_time_list': filteredTimeLists, 'stop_lat': stop_lat, 'stop_lon': stop_lon})
 
 def allStops(request, stop_id=None):
     c_page = None
@@ -117,14 +105,6 @@ def nearby_stops(request, stop_id=None):
 def home(request):
     return render(request, 'realtime/home.html')
 
-from django.shortcuts import render
-from .models import Route, Stop, Trip
-
-
-import datetime
-
-from django.core.paginator import Paginator
-
 def allRoutes(request):
     # Get the current day of the week
     today = datetime.datetime.today().weekday()
@@ -151,7 +131,6 @@ def allRoutes(request):
     }
 
     return render(request, 'realtime/route_list.html', context)
-
 
 def routeDetails(request, route_id):
     # Get all the trips associated with the Route object
