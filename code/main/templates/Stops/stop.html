@@ -1,30 +1,19 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %} 
-	{% if continent %}
-		{{ continent.name }}
-	{% else %}
-		Global
-	{% endif %}
+	Stops
 {% endblock %}
 {% block content %}
 	<!--Breadcrumb navigation-->
-	{% if stop %}
-	<br>
-	<div>
-		<h1 class="text-center">{{stop.stop_name}}</h1>
-    {% else %}
-	<br>
-	<div>
-		<h1 class="text-center">All Stops</h1>
-	</div>
-    {% endif %}
-
-	{% for i in route %}
-		{{i.route_short_name}}
-	{% endfor %}
-	
     <div class="container">
+				<form method="GET" action="{% url 'main:allStops' %}">
+				  <div class="input-group mb-3 pt-3">
+					<input type="text" class="form-control py-4" placeholder="Search for stops" name="q" value="{{ request.GET.q }}">
+					<div class="input-group-append">
+					  <button class="btn text-light bg-primary btn-outline-secondary" type="submit">Search Stops</button>
+					</div>
+				  </div>
+				</form>
 		<div class="row mx-auto">
 			{% for stops in stop_lists.object_list %}
 				<div class="my_bottom margin col-12 col-lg-4 pt-3">
@@ -84,6 +73,10 @@
 		  .pagination {
 			font-size: 80%;
 		  }
+		}
+		.form-control.py-4 {
+		padding-top: 2rem;
+		padding-bottom: 2rem;
 		}
 	</style>
 

@@ -69,6 +69,12 @@ def allStops(request, stop_id=None):
     else:
         stop_list = Stop.objects.all().filter()
 
+    if request.GET.get('q'):
+        query = request.GET['q']
+        stop_list = Stop.objects.filter(Q(stop_name__icontains=query) | Q(stop_id__icontains=query))
+    else:
+        stop_list = Stop.objects.all().filter()
+
     '''Pagination Code'''
     paginator = Paginator(stop_list, 100)
     try:
