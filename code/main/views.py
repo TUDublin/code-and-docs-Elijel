@@ -114,6 +114,13 @@ def allRoutes(request):
     else:  # Saturday or Sunday
         routes = Route.objects.filter(route_id__icontains='d')
     
+    # Get the search query from the GET parameters
+    search_query = request.GET.get('search')
+
+    if search_query:
+        # Filter the routes by the search query
+        routes = routes.filter(route_id__icontains=search_query)
+
     # Number of routes to display per page
     routes_per_page = 21
 
@@ -131,6 +138,7 @@ def allRoutes(request):
     }
 
     return render(request, 'Route/route_list.html', context)
+
 
 def routeDetails(request, route_id):
     # Get all the trips associated with the Route object
