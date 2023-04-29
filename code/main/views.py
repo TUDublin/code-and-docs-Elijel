@@ -42,8 +42,14 @@ def allStopTimes(request, stop_id=None):
                 'route_short_name': st.trip_id.route_id.route_short_name,
                 'due_now': due_now
             })
+
+        if now.weekday() == 5:  # Saturday
+            keyValList = ['1']
+        elif now.weekday() == 6:  # Sunday
+            keyValList = ['3']
+        else:  # Mon-Fri
+            keyValList = ['2']
             
-        keyValList = ['2']
         filteredTimeList = [st for st in stop_times if st['service_id'] in keyValList]
         
         paginator = Paginator(filteredTimeList, 12)
@@ -57,7 +63,6 @@ def allStopTimes(request, stop_id=None):
             filteredTimeLists = paginator.page(paginator.num_pages)
         
         return render(request, 'Stops/stoptimes.html', {'stop': c_page, 'stop_time_list': filteredTimeLists, 'stop_lat': stop_lat, 'stop_lon': stop_lon})
-
 
 def allStops(request, stop_id=None):
     c_page = None
@@ -200,11 +205,6 @@ def destination(request):
         return render(request, 'Destination/search_results.html', {'routes': routes})
     else:
         return render(request, 'Destination/search.html')
-
-
-
-
-
 
 #Depriciated and Stopped Working.
 def test(request):

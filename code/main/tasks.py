@@ -1,6 +1,4 @@
-from time import sleep
 from celery import shared_task
-from django.shortcuts import render
 import requests
 from .models import Realtime
 
