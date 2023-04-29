@@ -197,49 +197,7 @@ def destination(request):
     else:
         return render(request, 'Destination/search.html')
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#Depriciated and Stopped Working.
 def test(request):
     url='https://api.nationaltransport.ie/gtfsr/v1?format=json'
 

@@ -1,9 +1,13 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Ninth navbar example">
+{% load static %}
+
+<nav class="navbar navbar-expand-lg navbar-dark" aria-label="Ninth navbar example">
   <div class="container-xl">
-    <a class="navbar-brand text-white" href="{% url 'main:home' %}">DB BusApp</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler order-first" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+    <a class="navbar-brand mx-auto" href="{% url 'main:home' %}">
+      <img src="{% static 'LOGO.PNG' %}" alt="LOGO">
+    </a>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">
@@ -23,4 +27,58 @@
       </ul>
     </div>
   </div>
-</nav> 
+</nav>
+
+<style>
+  .navbar-brand img {
+    height: 80px;
+    width: auto;
+    max-width: 110%;
+    border-radius: 10%
+  }
+
+  .navbar {
+    background-color: #148be0;
+  }
+
+  /* Dropdown background and contrast */
+
+  @media (max-width: 767.98px) {
+    .navbar-brand {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding-right: 60px;
+    }
+
+    .navbar-nav {
+    margin: auto;
+    display: table;
+    table-layout: fixed;
+    float: none;
+  }
+
+    .navbar-nav > li {
+    display: table-cell;
+    float: none;
+  }
+
+    .navbar-toggler {
+      margin-left: 0;
+    }
+
+    .navbar-nav .dropdown-menu {
+      background-color: #368fcf;
+      text-align: center;
+    } 
+
+    .navbar-brand img {
+      max-width: 100%;
+      height: 125px;
+    }
+
+    .navbar-brand .d-none {
+      display: none;
+    }
+  }
+</style>

@@ -60,7 +60,7 @@ ROOT_URLCONF = 'project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [str(BASE_DIR.joinpath('main','templates')), str(BASE_DIR.joinpath('searchstop','templates')), str(BASE_DIR.joinpath('accounts','templates'))],
+        'DIRS': [str(BASE_DIR.joinpath('main','templates')), str(BASE_DIR.joinpath('accounts','templates'))],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -128,10 +128,8 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATICFILES_DIRS = [str(BASE_DIR.joinpath('zfiles/static'))]
 STATIC_ROOT = str(BASE_DIR.joinpath('zfiles/staticfiles'))
-STATICFILES_FINDERS = [
-    "django.contrib.staticfiles.finders.FileSystemFinder",
-    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-]
+STATICFILES_FINDERS = [    "django.contrib.staticfiles.finders.FileSystemFinder",    "django.contrib.staticfiles.finders.AppDirectoriesFinder",]
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = str(BASE_DIR.joinpath('zfiles/media'))
 CELERY_BROKER_URL = 'amqp://localhost'
