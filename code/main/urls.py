@@ -9,6 +9,7 @@ urlpatterns = [
     path('routes/', views.allRoutes, name='allRoutes'),
     path('routes/<route_id>/', views.routeDetails, name='routeDetails'),
     path('allstops/', views.allStops, name='allStops'),
+    path('allstops/<stop_id>/', views.allStops, name='allStops'),
     path('', views.home, name='home'),
     path('nearbystops/', views.nearby_stops, name='nearby_stops'),
     path('<stop_id>/', views.allStopTimes, name='stops_by_stoptimes'),

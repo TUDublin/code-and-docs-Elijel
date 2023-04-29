@@ -4,7 +4,6 @@ from .models import Stop, Stop_Time, Trip, Route
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 import datetime
 from django.db.models import Q
-from django.shortcuts import render
 
 def allStopTimes(request, stop_id=None):
     now = datetime.datetime.now()
@@ -130,7 +129,6 @@ def allRoutes(request):
 
     return render(request, 'Route/route_list.html', context)
 
-
 def routeDetails(request, route_id):
     trips = Trip.objects.filter(route_id=route_id)
 
@@ -197,6 +195,11 @@ def destination(request):
     else:
         return render(request, 'Destination/search.html')
 
+
+
+
+
+
 #Depriciated and Stopped Working.
 def test(request):
     url='https://api.nationaltransport.ie/gtfsr/v1?format=json'
@@ -220,3 +223,46 @@ def test(request):
                     realtimedict.append(list({'rt_trip_id': rt_trip_id, 'rt_route_id':rt_route_id, 'rt_schedule':rt_schedule, 'rt_stop_sequence':rt_stop_sequence, 'rt_stop_id':rt_stop_id}))
  
     return render(request,'Base/test.html',({'response':response, 'result':realtimedict}))
+
+# from google.protobuf.json_format import MessageToJson
+# from google.transit import gtfs_realtime_pb2
+
+#Attempt at trying to use the new feed
+#def protobuf_to_dict(feed):
+#    """Converts a GTFS Realtime feed in protocol buffer format to a dictionary."""
+#    feed_dict = MessageToJson(feed, preserving_proto_field_name=True)
+#   feed_dict = json.loads(feed_dict)
+#    return feed_dict
+
+#Attempt at trying to use the new feed
+#def stop_details(request, stop_id):
+#    url = 'https://api.nationaltransport.ie/gtfsr/v2/gtfsr'
+#    api_key = 'd420a4108eed4bdba373ab30581679c9'
+
+#    headers = {'x-api-key': api_key}
+#    response = requests.get(url, headers=headers)
+
+#   feed = gtfs_realtime_pb2.FeedMessage()
+#    feed.ParseFromString(response.content)
+#    feed_dict = protobuf_to_dict(feed)
+
+#    stop_times = []
+#    if isinstance(feed.entity, list):
+#        entities = feed.entity
+#    else:
+#        entities = [feed.entity]
+#    for entity in entities:
+#        if 'trip_update' in entity:
+#            for update in entity.trip_update.stop_time_update:
+#                if 'stop_id' in update and update.stop_id == stop_id:
+#                    stop_time = {
+#                        'trip_id': entity.trip_update.trip.trip_id,
+#                        'arrival_time': update.arrival.time,
+#                        'departure_time': update.departure.time,
+#                        'delay': update.arrival.delay,
+#                        'stop_sequence': update.stop_sequence,
+#                    }
+#                    stop_times.append(stop_time)
+
+#    context = {'stop_details': stop_times}
+#    return render(request, 'stop_details.html', context)

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Stop Times</title>
+  </head>
+  <body>
+    <h1>Stop Times for {{ stop_id }}</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Trip ID</th>
+          <th>Arrival Time</th>
+          <th>Departure Time</th>
+          <th>Delay</th>
+          <th>Stop Sequence</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for stop_time in stop_times %}
+        <tr>
+          <td>{{ stop_time.trip_id }}</td>
+          <td>{{ stop_time.arrival_time }}</td>
+          <td>{{ stop_time.departure_time }}</td>
+          <td>{{ stop_time.delay }}</td>
+          <td>{{ stop_time.stop_sequence }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>
+
+{% endblock %}
