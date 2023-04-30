@@ -4,4 +4,6 @@ pyyaml
 requests
 django-cors-headers
 Celery
-django-crispy-forms
+django-crispy-forms==1.14.0
+pylint
+bandit
