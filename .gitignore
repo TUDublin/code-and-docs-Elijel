@@ -4,6 +4,7 @@ __pycache__/
 *.py[cod]
 migrations/
 media/
+db.sqlite3
 # C extensions
 *.so
 
