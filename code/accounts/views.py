@@ -40,6 +40,7 @@ def signupView(request):
             signup_user = CustomUser.objects.get(username=username)
             customer_group = Group.objects.get(name='Customer')
             customer_group.user_set.add(signup_user)
+            return redirect('main:home')
     else:
         form = CustomUserCreationForm()
     return render(request, 'signup.html', {'form':form})
