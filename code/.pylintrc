@@ -1,0 +1,11 @@
+[MASTER]
+# Specify the maximum line length
+max-line-length = 120
+
+[MESSAGES CONTROL]
+# Disable some warnings that are not relevant for Django projects
+disable = C0103, R0903, R0913, W0511
+
+[REPORTS]
+# Set the output format to colorized
+output-format = colorized
