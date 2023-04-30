@@ -1,4 +1,3 @@
-from turtle import Shape
 from django.contrib import admin
 from .models import Stop, Stop_Time, Route, Trip, Agency, Calender, Calender_Dates, Realtime
 
