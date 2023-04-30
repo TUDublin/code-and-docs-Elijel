@@ -21,11 +21,16 @@ def allStopTimes(request, stop_id=None):
         
         stop_times = []
         for st in stop_time_list:
-            if st.arrival_time == now or st.departure_time == now:
+            now_hm = now.strftime('%H:%M')
+            arrival_hm = st.arrival_time.strftime('%H:%M')
+            departure_hm = st.departure_time.strftime('%H:%M')
+            if arrival_hm == now_hm or departure_hm == now_hm or \
+            (now_hm == arrival_hm[:-3] and int(arrival_hm[-2:]) - int(now_hm[-2:]) == 1) or \
+            (now_hm == departure_hm[:-3] and int(departure_hm[-2:]) - int(now_hm[-2:]) == 1):
                 due_now = True
             else:
                 due_now = False
-                
+
             stop_times.append({
                 'stop_sequence': st.stop_sequence,
                 'trip_id': st.trip_id.trip_id,
@@ -35,9 +40,9 @@ def allStopTimes(request, stop_id=None):
                 'service_id': st.trip_id.service_id.service_id,
                 'route_id': st.trip_id.route_id.route_id,
                 'route_short_name': st.trip_id.route_id.route_short_name,
-                'due_now': due_now  # add a 'due_now' flag to the dictionary
+                'due_now': due_now
             })
-
+            
         keyValList = ['2']
         filteredTimeList = [st for st in stop_times if st['service_id'] in keyValList]
         
@@ -52,6 +57,7 @@ def allStopTimes(request, stop_id=None):
             filteredTimeLists = paginator.page(paginator.num_pages)
         
         return render(request, 'Stops/stoptimes.html', {'stop': c_page, 'stop_time_list': filteredTimeLists, 'stop_lat': stop_lat, 'stop_lon': stop_lon})
+
 
 def allStops(request, stop_id=None):
     c_page = None

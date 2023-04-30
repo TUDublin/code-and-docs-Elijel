@@ -58,7 +58,7 @@ Stop Times
                         <td><a href="{% url 'main:routeDetails' i.route_id %}"><h4>{{i.route_short_name}}</h4></a></td>
                         <td>{{i.stop_headsign}}</td>
                         <td>
-                            {% if i.arrival_time == stop_time %}
+                            {% if i.due_now == True %}
                                 <p>Due now</p>
                             {% else %}
                                 {{i.arrival_time}}
