@@ -17,6 +17,9 @@ class SignupViewTestCase(TestCase):
 
     def test_signup_view_post(self):
         response = self.client.post(self.url, data=self.user_data)
+        print(response.content.decode('utf-8'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('main:home'))
         self.assertTrue(CustomUser.objects.filter(username='testuser').exists())
         user = CustomUser.objects.get(username='testuser')
         self.assertTrue(self.customer_group in user.groups.all())

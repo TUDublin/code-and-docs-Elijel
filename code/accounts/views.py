@@ -7,6 +7,8 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
+
 @login_required
 def favoritesView(request):
     user = request.user
@@ -40,10 +42,11 @@ def signupView(request):
             signup_user = CustomUser.objects.get(username=username)
             customer_group = Group.objects.get(name='Customer')
             customer_group.user_set.add(signup_user)
-            return redirect('main:home')
+            messages.success(request, 'Your account has been created successfully!')
     else:
         form = CustomUserCreationForm()
     return render(request, 'signup.html', {'form':form})
+
 
 def signinView(request):
     if request.method == 'POST':

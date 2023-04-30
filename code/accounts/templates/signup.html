@@ -6,6 +6,13 @@
 {% endblock %}
 {% block content %}
 	<div class="container">
+		{% if messages %}
+		    <div class="alert alert-success">
+		        {% for message in messages %}
+		            {{ message }}
+		        {% endfor %}
+		    </div>
+		{% endif %}
 		{% if not form.is_valid %}
 			<div class="row justify-content-center">
 				<div class="col-lg-6 col-md-8 col-sm-10 col-12">
@@ -35,7 +42,7 @@
 							<br>
 							Your account has been created and it is ready to use.
 							<br>
-	                        <a href="{% url 'main:allStops' %}" class="text-info">View Stops</a> 
+	                        <a href="{% url 'main:home' %}" class="text-info">Return Home</a> 
 						</p>
 					</div>
 				</div>
